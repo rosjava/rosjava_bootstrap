@@ -1,5 +1,11 @@
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.5'
+}
+
 apply plugin: 'groovy'
 apply plugin: 'maven'
+
 dependencies {
     compile gradleApi()
     groovy localGroovy()
@@ -10,7 +16,7 @@ repositories {
  
 group='com.github.rosjava.rosjava_gradle_plugins'
 version='0.1.0-SNAPSHOT'
- 
+
 uploadArchives {
     repositories {
         mavenDeployer {
