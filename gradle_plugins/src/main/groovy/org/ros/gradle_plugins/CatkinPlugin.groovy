@@ -3,6 +3,8 @@ package org.ros.gradle_plugins;
 import org.gradle.api.Project;
 import org.gradle.api.Plugin;
 import org.gradle.api.Task;
+import org.gradle.api.tasks.JavaExec
+
 import org.gradle.api.*;
 
 /*
@@ -34,24 +36,31 @@ class CatkinPlugin implements Plugin<Project> {
      * Possibly should check for existence of these properties and 
      * be lazy if they're already defined.
      */
+    Project project
+    
 	def void apply(Project project) {
+	    this.project = project
 	    /* Create project.catkin.* property extensions */
 	    project.extensions.create("catkin", CatkinPluginExtension)
-	    /*
-	    project.catkin.dude = "ahem"
-	    project.catkin.information = new CatkinPackage(file('package.xml'))
-	    */
 	    project.catkin.packages = [:]
 	    project.catkin.workspaces = []
 	    project.catkin.workspaces = "$System.env.ROS_PACKAGE_PATH".split(":")
-	    project.catkin.workspaces.each { rosPackageRoot ->
-            def manifestTree = project.fileTree(dir: rosPackageRoot, include: '**/package.xml')
+	    /*
+	     * Would be more ideal shifting this expensive fileTree operation so
+	     * that its' lazily generated (generated only if used), but that's a bit
+	     * tricky - maybe by overriding CatkinPluginExtensions.getPackages()? 
+	     */
+	    project.catkin.workspaces.each { workspace ->
+            def manifestTree = project.fileTree(dir: workspace, include: '**/package.xml')
             manifestTree.each { file -> 
                 def pkg = new CatkinPackage(file)
                 project.catkin.packages.put(pkg.name, pkg)
             }
 	    }
+	    setTasks()
         println("CatkinPlugin is happy, you should be too.")
+    }
+    def void setTasks() {
         project.task('catkinPackageInfo') << {
             println("CatkinPlugin is happy, you should be too.")
             println("Catkin Workspaces........." + project.catkin.workspaces)
@@ -62,25 +71,9 @@ class CatkinPlugin implements Plugin<Project> {
         }
     }
 }
-
 class CatkinPluginExtension {
-    /*
-    CatkinPackage information
-    String dude
-    */
     List<String> workspaces
     Map<String, CatkinPackage> packages
-}
-
-/*
- * Use this to establish methods that can be used by the project.
- * Currently don't have any.
- */
-class CatkinPluginConvention {
-    private Project project
-    public CatkinPluginConvention(Project project) {
-        this.project = project
-    }
 }
 
 class CatkinPackage {
@@ -121,6 +114,22 @@ class CatkinPackage {
             }
         }
         return msgDependencies
+    }
+    
+    def void generateMessageArtifact(Project p) {
+        p.version = version
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generator:0.1.0')
+        messageDependencies().each { d ->
+            p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
+        }
+        def generatedSourcesDir = "${p.buildDir}/generated-src"
+        def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
+        generateSourcesTask.description = "Generate sources for " + name
+        generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
+        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, name])
+        generateSourcesTask.classpath = p.configurations.runtime
+        generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
+        p.tasks.compileJava.source generateSourcesTask.outputs.files
     }
 }
 
