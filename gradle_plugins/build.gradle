@@ -14,7 +14,11 @@
  * the License.
  */
 
-/* rootProject.name = 'catkin' */
+apply plugin: 'groovy'
 
-include 'gradle_plugins'
-include 'message_generator'
+version='0.1.0'
+
+dependencies {
+    compile gradleApi()
+    groovy localGroovy()
+}

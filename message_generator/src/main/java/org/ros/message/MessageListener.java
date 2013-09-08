@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,7 +14,23 @@
  * the License.
  */
 
-/* rootProject.name = 'catkin' */
+package org.ros.message;
 
-include 'gradle_plugins'
-include 'message_generator'
+/**
+ * A callback for asynchronous message-related operations.
+ * 
+ * @author damonkohler@google.com (Damon Kohler)
+ * 
+ * @param <T>
+ *          the type of message expected
+ */
+public interface MessageListener<T> {
+
+  /**
+   * Called when a new message arrives.
+   * 
+   * @param message
+   *          the new message
+   */
+  void onNewMessage(T message);
+}
