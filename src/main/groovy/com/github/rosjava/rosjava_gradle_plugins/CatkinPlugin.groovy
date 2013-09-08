@@ -6,12 +6,11 @@ import org.gradle.api.Task;
 import org.gradle.api.*;
 
 /*
- * Provides catkin information to the gradle build, defining properties for
- * use by the project:
+ * Provides catkin information to the gradle build, defining properties:
  *
- * - project.catkin.rosPackagePath
- * - project.catkin.packages
- *
+ * - project.catkin.rosPackagePath : list of Strings
+ * - project.catkin.packages : dictionary of CatkinPackage objects
+ * 
  * The latter can be iterated over for information:
  *
  * project.catkin.packages.each { pair ->
@@ -19,6 +18,10 @@ import org.gradle.api.*;
  *     println pkg.name
  *     println pkg.version
  *     pkg.dependencies.each { d ->
+ *         println d
+ *     }
+ *     // filtered list of *_msg dependencies.
+ *     pkg.messageDependencies().each { d ->
  *         println d
  *     }
  * }
@@ -37,7 +40,6 @@ class CatkinPlugin implements Plugin<Project> {
 	    project.catkin.rosPackagePath = []
 	    project.catkin.rosPackagePath = "$System.env.ROS_PACKAGE_PATH".split(":")
 	    project.catkin.rosPackagePath.each { rosPackageRoot ->
-	        println("RosPackageRoot.........${rosPackageRoot}")
             def manifestTree = project.fileTree(dir: rosPackageRoot, include: '**/package.xml')
             manifestTree.each { file -> 
                 def pkg = new CatkinPackage(file)
@@ -46,7 +48,7 @@ class CatkinPlugin implements Plugin<Project> {
 	    }
         println("CatkinPlugin is happy, you should be too.")
         project.task('catkinPackageInfo') << {
-            println "I'll teach your grandmother to suck eggs!"
+            println("CatkinPlugin is happy, you should be too.")
             println("rosPackagePath........." + project.catkin.rosPackagePath)
             println("Catkin Packages")
             project.catkin.packages.each { pkg ->
@@ -95,7 +97,21 @@ class CatkinPackage {
             out += "    " + d + "\n"
         }
         return out
-    
+    }
+    /*
+     * Find and annotate a list of package package dependencies.
+     * Useful for message artifact generation).
+     *
+     * @return List<String> : dependencies (package name strings)  
+     */
+    def List<String> messageDependencies() {
+        List<String> msgDependencies = []
+        dependencies.each { d ->
+            if ( d.contains("_msgs") ) {
+                msgDependencies.add(d)
+            }
+        }
+        return msgDependencies
     }
 }
 
