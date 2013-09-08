@@ -8,7 +8,7 @@ import org.gradle.api.*;
 /*
  * Provides catkin information to the gradle build, defining properties:
  *
- * - project.catkin.rosPackagePath : list of Strings
+ * - project.catkin.workspaces : list of Strings
  * - project.catkin.packages : dictionary of CatkinPackage objects
  * 
  * The latter can be iterated over for information:
@@ -35,11 +35,16 @@ class CatkinPlugin implements Plugin<Project> {
      * be lazy if they're already defined.
      */
 	def void apply(Project project) {
+	    /* Create project.catkin.* property extensions */
 	    project.extensions.create("catkin", CatkinPluginExtension)
+	    /*
+	    project.catkin.dude = "ahem"
+	    project.catkin.information = new CatkinPackage(file('package.xml'))
+	    */
 	    project.catkin.packages = [:]
-	    project.catkin.rosPackagePath = []
-	    project.catkin.rosPackagePath = "$System.env.ROS_PACKAGE_PATH".split(":")
-	    project.catkin.rosPackagePath.each { rosPackageRoot ->
+	    project.catkin.workspaces = []
+	    project.catkin.workspaces = "$System.env.ROS_PACKAGE_PATH".split(":")
+	    project.catkin.workspaces.each { rosPackageRoot ->
             def manifestTree = project.fileTree(dir: rosPackageRoot, include: '**/package.xml')
             manifestTree.each { file -> 
                 def pkg = new CatkinPackage(file)
@@ -49,7 +54,7 @@ class CatkinPlugin implements Plugin<Project> {
         println("CatkinPlugin is happy, you should be too.")
         project.task('catkinPackageInfo') << {
             println("CatkinPlugin is happy, you should be too.")
-            println("rosPackagePath........." + project.catkin.rosPackagePath)
+            println("Catkin Workspaces........." + project.catkin.workspaces)
             println("Catkin Packages")
             project.catkin.packages.each { pkg ->
                 print pkg.value.toString()
@@ -59,8 +64,12 @@ class CatkinPlugin implements Plugin<Project> {
 }
 
 class CatkinPluginExtension {
+    /*
+    CatkinPackage information
+    String dude
+    */
+    List<String> workspaces
     Map<String, CatkinPackage> packages
-    List<String> rosPackagePath
 }
 
 /*
@@ -107,7 +116,7 @@ class CatkinPackage {
     def List<String> messageDependencies() {
         List<String> msgDependencies = []
         dependencies.each { d ->
-            if ( d.contains("_msgs") || d.contains("_srvs") ) {
+            if ( d.contains("_msgs") ) {
                 msgDependencies.add(d)
             }
         }
