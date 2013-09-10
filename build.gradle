@@ -23,7 +23,6 @@ project.ext {
   rosMavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
 }
 
-
 allprojects {
     group='org.ros.rosjava_bootstrap'
 }
@@ -43,12 +42,16 @@ subprojects {
     }
     if ( project.rosMavenDeploymentPath != 'null' && project.rosMavenDeploymentPath != '' ) {
         uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: 'file://' + project.rosMavenDeploymentPath)
-                }
+            repositories.mavenDeployer {
+                println("Class: " + repository(url: 'file://' + project.rosMavenDeploymentPath).getClass())
+                repository(url: 'file://' + project.rosMavenDeploymentPath)
             }
         }
+        /*
+        uploadArchives {
+            repositories.mavenDeployer.repository(url: 'file://' + project.rosMavenDeploymentPath)
+        }
+        */
     }
 }
 

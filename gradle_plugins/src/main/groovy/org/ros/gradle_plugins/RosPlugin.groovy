@@ -17,17 +17,26 @@ class RosPlugin implements Plugin<Project> {
     
 	def void apply(Project project) {
 	    this.project = project
-	    println("RosPlugin")
+        if (!project.plugins.findPlugin('maven')) {
+            project.apply(plugin: org.gradle.api.plugins.MavenPlugin)
+        }
 	    /* Create project.ros.* property extensions */
 	    project.extensions.create("ros", RosPluginExtension)
 	    project.ros.maven = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
         if ( project.ros.maven != 'null' && project.ros.maven != '' ) {
-            uploadArchives {
-                repositories {
-                    mavenDeployer {
-                        repository(url: 'file://' + project.rosMavenDeploymentPath)
-                    }
+            project.uploadArchives {
+                repositories.mavenDeployer {
+                    repository(url: 'file://' + project.ros.maven)
                 }
+            }
+        }
+        project.repositories {
+            maven {
+                url 'file://' + project.ros.maven
+            }
+            mavenLocal()
+            maven {
+                url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
             }
         }
     }
