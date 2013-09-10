@@ -11,7 +11,7 @@ project(rosjava_bootstrap)
 
 find_package(catkin REQUIRED rosjava_build_tools)
 
-catkin_rosjava_setup(install)
+catkin_rosjava_setup(uploadArchives)
 
 catkin_package()
 
@@ -19,4 +19,5 @@ catkin_package()
 # Installation
 ##############################################################################
 
-# Todo
+install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_MAVEN_DESTINATION}/ros/rosjava_bootstrap/ 
+        DESTINATION ${CATKIN_GLOBAL_MAVEN_DESTINATION}/ros/rosjava_bootstrap)

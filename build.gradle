@@ -18,6 +18,11 @@ task wrapper(type: Wrapper) {
   gradleVersion = '1.7'
 }
 
+project.ext {
+  /* the ros plugin defines this, but since we're building the plugin... */
+  rosMavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
+}
+
 
 allprojects {
     group='org.ros.rosjava_bootstrap'
@@ -28,21 +33,23 @@ subprojects {
     apply plugin: 'maven'
 
     repositories {
+        maven {
+            url 'file://' + project.rosMavenDeploymentPath
+        }
         mavenLocal()
         maven {
             url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
         }
     }
-
-    /*
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                repository(url: uri('../repo'))
+    if ( project.rosMavenDeploymentPath != 'null' && project.rosMavenDeploymentPath != '' ) {
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    repository(url: 'file://' + project.rosMavenDeploymentPath)
+                }
             }
         }
     }
-    */
 }
 
 defaultTasks 'install'
