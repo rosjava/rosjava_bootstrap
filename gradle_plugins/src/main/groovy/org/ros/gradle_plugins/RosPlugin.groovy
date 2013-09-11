@@ -7,10 +7,14 @@ import org.gradle.api.*;
 /*
  * Provides information about the ros workspace.
  *
- * - project.ros.maven : location of local ros maven repository
+ * - project.ros.mavenPath : location of local ros maven repositories (in your chained workspaces)
+ * - project.ros.mavenDeploymentPath : location of the ros maven repository you will publish to
+ *
+ * It also performs the following actions
  * 
- * Use this only once in the root of a multi-project gradle build - it will
- * only generate the properties once and share them this way.
+ * - checks and maeks sure the maven plugin is running
+ * - constructs the sequence of dependant maven repos (local ros maven repos, mavenLocal, external ros maven repo)
+ * - configures the uploadArchives for artifact deployment to the local ros maven repo (devel/share/maven)
  */
 class RosPlugin implements Plugin<Project> {
     Project project
@@ -22,17 +26,21 @@ class RosPlugin implements Plugin<Project> {
         }
 	    /* Create project.ros.* property extensions */
 	    project.extensions.create("ros", RosPluginExtension)
-	    project.ros.maven = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
-        if ( project.ros.maven != 'null' && project.ros.maven != '' ) {
+	    project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
+        project.ros.mavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
+        if ( project.ros.mavenDeploymentPath != 'null' && project.ros.mavenDeploymentPath != '' ) {
             project.uploadArchives {
                 repositories.mavenDeployer {
-                    repository(url: 'file://' + project.ros.maven)
+                    repository(url: 'file://' + project.ros.mavenDeploymentPath)
                 }
             }
         }
+        def repoURLs = project.ros.mavenPath.collect { 'file://' + it }
         project.repositories {
-            maven {
-                url 'file://' + project.ros.maven
+            repoURLs.each { p ->
+                maven {
+                    url p
+                }
             }
             mavenLocal()
             maven {
@@ -43,5 +51,6 @@ class RosPlugin implements Plugin<Project> {
 }
 
 class RosPluginExtension {
-    String maven
+    List<String> mavenPath
+    String mavenDeploymentPath
 }
