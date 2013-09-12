@@ -69,6 +69,7 @@ public class GenerateInterfaces {
       packages = topicDefinitionFileProvider.getPackages();
     }
     for (String pkg : packages) {
+    	System.out.println("Package: " + pkg);
       Collection<MessageIdentifier> messageIdentifiers =
           topicDefinitionFileProvider.getMessageIdentifiersByPackage(pkg);
       if (messageIdentifiers != null) {
