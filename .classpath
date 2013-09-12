@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="gradle_plugins/src/main/groovy"/>
-	<classpathentry kind="src" path="message_generation/src/test/java"/>
 	<classpathentry kind="src" path="message_generation/src/main/java"/>
 	<classpathentry kind="lib" path="gradle/wrapper/gradle-wrapper.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

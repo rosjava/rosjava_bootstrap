@@ -52,31 +52,31 @@ public class Md5GeneratorTest {
   @Test
   public void testPrimitives() {
     TopicDescription topicDescription =
-        topicDescriptionFactory.newFromType("test_ros/TestPrimitives");
+        topicDescriptionFactory.newFromType("rosjava_test_msgs/TestPrimitives");
     assertEquals("3e70f428a22c0d26ca67f87802c8e00f", topicDescription.getMd5Checksum());
   }
 
   @Test
   public void testString() {
-    TopicDescription topicDescription = topicDescriptionFactory.newFromType("test_ros/TestString");
+    TopicDescription topicDescription = topicDescriptionFactory.newFromType("rosjava_test_msgs/TestString");
     assertEquals("334ff4377be93faa44ebc66d23d40fd3", topicDescription.getMd5Checksum());
   }
 
   @Test
   public void testHeader() {
-    TopicDescription topicDescription = topicDescriptionFactory.newFromType("test_ros/TestHeader");
+    TopicDescription topicDescription = topicDescriptionFactory.newFromType("rosjava_test_msgs/TestHeader");
     assertEquals("4b5a00f536da2f756ba6aebcf795a967", topicDescription.getMd5Checksum());
   }
 
   @Test
   public void testArrays() {
-    TopicDescription topicDescription = topicDescriptionFactory.newFromType("test_ros/TestArrays");
+    TopicDescription topicDescription = topicDescriptionFactory.newFromType("rosjava_test_msgs/TestArrays");
     assertEquals("4cc9b5e2cebe791aa3e994f5bc159eb6", topicDescription.getMd5Checksum());
   }
 
   @Test
   public void testComposite() {
-    TopicDescription topicDescription = topicDescriptionFactory.newFromType("test_ros/Composite");
+    TopicDescription topicDescription = topicDescriptionFactory.newFromType("rosjava_test_msgs/Composite");
     assertEquals("d8fb6eb869ad3956b50e8737d96dc9fa", topicDescription.getMd5Checksum());
   }
 
@@ -95,14 +95,14 @@ public class Md5GeneratorTest {
   @Test
   public void testAddTwoInts() {
     ServiceDescription serviceDescription =
-        serviceDescriptionFactory.newFromType("test_ros/AddTwoInts");
+        serviceDescriptionFactory.newFromType("rosjava_test_msgs/AddTwoInts");
     assertEquals("6a2e34150c00229791cc89ff309fff21", serviceDescription.getMd5Checksum());
   }
 
   @Test
   public void testTransitiveSrv() {
     ServiceDescription serviceDescription =
-        serviceDescriptionFactory.newFromType("test_rospy/TransitiveSrv");
+        serviceDescriptionFactory.newFromType("rosjava_test_msgspy/TransitiveSrv");
     assertEquals("8b7918ee2b81eaf825f4c70de011f6fa", serviceDescription.getMd5Checksum());
   }
 }

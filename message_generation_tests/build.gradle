@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,9 +14,18 @@
  * the License.
  */
 
-/* rootProject.name = 'catkin' */
+version='0.1.0'
 
-include 'gradle_plugins'
-include 'message_generation'
-include 'rosjava_test_msgs'
-include 'message_generation_tests'
+dependencies {
+  compile project(':gradle_plugins')
+  compile project(':rosjava_test_msgs')
+}
+
+jar {
+  manifest {
+    version = project.version
+    symbolicName = 'org.ros.rosjava_bootstrap.message_generation_tests'
+  }
+}
+
+

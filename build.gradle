@@ -21,6 +21,7 @@ task wrapper(type: Wrapper) {
 project.ext {
   /* the ros plugin defines this, but since we're building the plugin... */
   rosMavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
+  rosMavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
 }
 
 allprojects {
@@ -28,12 +29,19 @@ allprojects {
 }
 
 subprojects {
+    /* Have to manually do this below since our gradle plugin is our sub project */
     apply plugin: 'java'
     apply plugin: 'maven'
 
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+
+    def repoURLs = project.rosMavenPath.collect { 'file://' + it }
     repositories {
-        maven {
-            url 'file://' + project.rosMavenDeploymentPath
+        repoURLs.each { p ->
+            maven {
+                url p
+            }
         }
         mavenLocal()
         maven {
@@ -43,7 +51,6 @@ subprojects {
     if ( project.rosMavenDeploymentPath != 'null' && project.rosMavenDeploymentPath != '' ) {
         uploadArchives {
             repositories.mavenDeployer {
-                println("Class: " + repository(url: 'file://' + project.rosMavenDeploymentPath).getClass())
                 repository(url: 'file://' + project.rosMavenDeploymentPath)
             }
         }
