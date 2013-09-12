@@ -17,4 +17,4 @@
 /* rootProject.name = 'catkin' */
 
 include 'gradle_plugins'
-include 'message_generator'
+include 'message_generation'
