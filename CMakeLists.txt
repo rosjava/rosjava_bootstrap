@@ -19,5 +19,5 @@ catkin_package()
 # Installation
 ##############################################################################
 
-install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_MAVEN_DESTINATION}/ros/rosjava_bootstrap/ 
+install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_MAVEN_DESTINATION}/org/ros/rosjava_bootstrap/ 
         DESTINATION ${CATKIN_GLOBAL_MAVEN_DESTINATION}/ros/rosjava_bootstrap)
