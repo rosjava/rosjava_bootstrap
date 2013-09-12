@@ -118,7 +118,7 @@ class CatkinPackage {
     
     def void generateMessageArtifact(Project p) {
         p.version = version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generator:0.1.0')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.0')
         messageDependencies().each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
@@ -127,6 +127,26 @@ class CatkinPackage {
         generateSourcesTask.description = "Generate sources for " + name
         generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
         generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, name])
+        generateSourcesTask.classpath = p.configurations.runtime
+        generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
+        p.tasks.compileJava.source generateSourcesTask.outputs.files
+    }
+
+    /*
+     * Hack to work around for rosjava_test_msgs - look in a subfolder for the
+     * msgs and name the artifact by the subfolder name.
+     */
+    def void generateMessageArtifactInSubFolder(Project p, String subfolderName) {
+        p.version = version
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.0')
+        messageDependencies().each { d ->
+            p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
+        }
+        def generatedSourcesDir = "${p.buildDir}/generated-src"
+        def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
+        generateSourcesTask.description = "Generate sources for " + name + "/" + subfolderName
+        generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
+        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, subfolderName])
         generateSourcesTask.classpath = p.configurations.runtime
         generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
         p.tasks.compileJava.source generateSourcesTask.outputs.files
