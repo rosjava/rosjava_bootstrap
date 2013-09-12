@@ -14,8 +14,12 @@ class RosJavaPlugin implements Plugin<Project> {
 	def void apply(Project project) {
 	    this.project = project
         if (!project.plugins.findPlugin('java')) {
-            project.apply(plugin: org.gradle.api.plugins.JavaPlugin)
+            project.apply(plugin: 'java')
         }
+        if (!project.plugins.findPlugin('osgi')) {
+            project.apply(plugin: 'osgi')
+        }
+        
         project.sourceCompatibility = 1.6
         project.targetCompatibility = 1.6
     }
