@@ -10,12 +10,14 @@ import org.gradle.api.*;
 /*
  * Provides catkin information to the gradle build, defining properties:
  *
+ * - project.catkin.pkg : information about this package
  * - project.catkin.workspaces : list of Strings
- * - project.catkin.packages : dictionary of CatkinPackage objects
+ * - project.catkin.tree.generate() : create the pkgs dictionary
+ * - project.catkin.tree.pkgs : dictionary of CatkinPackage objects
  * 
  * The latter can be iterated over for information:
  *
- * project.catkin.packages.each { pair ->
+ * project.catkin.tree.pkgs.each { pair ->
  *     pkg = pair.value
  *     println pkg.name
  *     println pkg.version
@@ -42,23 +44,18 @@ class CatkinPlugin implements Plugin<Project> {
 	    this.project = project
 	    /* Create project.catkin.* property extensions */
 	    project.extensions.create("catkin", CatkinPluginExtension)
-	    project.catkin.packages = [:]
 	    project.catkin.workspaces = []
 	    project.catkin.workspaces = "$System.env.ROS_PACKAGE_PATH".split(":")
-	    /*
-	     * Would be more ideal shifting this expensive fileTree operation so
-	     * that its' lazily generated (generated only if used), but that's a bit
-	     * tricky - maybe by overriding CatkinPluginExtensions.getPackages()? 
-	     */
-	    project.catkin.workspaces.each { workspace ->
-            def manifestTree = project.fileTree(dir: workspace, include: '**/package.xml')
-            manifestTree.each { file -> 
-                def pkg = new CatkinPackage(file)
-                project.catkin.packages.put(pkg.name, pkg)
-            }
-	    }
+        project.catkin.tree = new CatkinPackages(project, project.catkin.workspaces)
+        def packageXml = project.file('package.xml')
+        if ( !packageXml.exists() ) {
+            def parentDirectoryName = file.getParentFile().getParent();
+            packageXml = project.file('package.xml')
+        }
+        if (packageXml != null) {
+            project.catkin.pkg = new CatkinPackage(packageXml)
+        }
 	    setTasks()
-        println("CatkinPlugin is happy, you should be too.")
     }
     def void setTasks() {
         project.task('catkinPackageInfo') << {
@@ -72,8 +69,33 @@ class CatkinPlugin implements Plugin<Project> {
     }
 }
 class CatkinPluginExtension {
+    CatkinPackage pkg
     List<String> workspaces
-    Map<String, CatkinPackage> packages
+    CatkinPackages tree
+}
+class CatkinPackages {
+    def Map<String, CatkinPackage> pkgs
+    def List<String> workspaces
+    def Project project
+    
+    def CatkinPackages(Project project, List<String> workspaces) {
+        this.project = project
+        this.workspaces = workspaces
+        this.pkgs = [:]
+    }
+    
+    def generate() {
+        if ( this.pkgs.size() == 0 ) {
+            println("Catkin plugin is generating the catkin package tree...")
+            this.workspaces.each { workspace ->
+                def manifestTree = project.fileTree(dir: workspace, include: '**/package.xml')
+                manifestTree.each { file -> 
+                    def pkg = new CatkinPackage(file)
+                    this.pkgs.put(pkg.name, pkg)
+                }
+            }
+        }
+    }
 }
 
 class CatkinPackage {
