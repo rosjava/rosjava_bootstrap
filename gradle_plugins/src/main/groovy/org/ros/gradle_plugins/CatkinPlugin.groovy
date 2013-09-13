@@ -158,10 +158,10 @@ class CatkinPackage {
      * Hack to work around for rosjava_test_msgs - look in a subfolder for the
      * msgs and name the artifact by the subfolder name.
      */
-    def void generateMessageArtifactInSubFolder(Project p, String subfolderName) {
+    def void generateMessageArtifactInSubFolder(Project p, String subfolderName, List<String> dependencies) {
         p.version = version
         p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.0')
-        messageDependencies().each { d ->
+        dependencies.each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
         def generatedSourcesDir = "${p.buildDir}/generated-src"
