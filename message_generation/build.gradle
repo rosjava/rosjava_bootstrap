@@ -27,7 +27,6 @@ dependencies {
 
 jar {
   manifest {
-    version = '0.1.0'
     symbolicName = 'org.ros.rosjava_messages.message_generation'
   }
 }
