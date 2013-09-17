@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.3 (2013-09-17)
+------------------
+* added excludes to the ros android plugin.
+
 0.1.2 (2013-09-17)
 ------------------
 * ros android plugin added
