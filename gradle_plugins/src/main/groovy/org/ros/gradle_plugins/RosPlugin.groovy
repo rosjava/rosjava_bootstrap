@@ -24,9 +24,9 @@ class RosPlugin implements Plugin<Project> {
         if (!project.plugins.findPlugin('maven')) {
             project.apply(plugin: org.gradle.api.plugins.MavenPlugin)
         }
-	    /* Create project.ros.* property extensions */
-	    project.extensions.create("ros", RosPluginExtension)
-	    project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
+        /* Create project.ros.* property extensions */
+        project.extensions.create("ros", RosPluginExtension)
+        project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
         project.ros.mavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
         if ( project.ros.mavenDeploymentPath != 'null' && project.ros.mavenDeploymentPath != '' ) {
             project.uploadArchives {
@@ -35,6 +35,10 @@ class RosPlugin implements Plugin<Project> {
                 }
             }
         }
+        /* 
+         * Could use some better handling for when this is not defined as it sets
+         * file://null, but it doesn't seem to hurt the process any
+         */
         def repoURLs = project.ros.mavenPath.collect { 'file://' + it }
         project.repositories {
             repoURLs.each { p ->
