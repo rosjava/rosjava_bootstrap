@@ -140,7 +140,7 @@ class CatkinPackage {
     
     def void generateMessageArtifact(Project p) {
         p.version = version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.0')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.+')
         messageDependencies().each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
