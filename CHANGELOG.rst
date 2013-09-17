@@ -2,6 +2,12 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* depend on message generation 0.1.+
+* use package.xml version.
+* run_depends for the build tools.
+
 0.1.3 (2013-09-17)
 ------------------
 * added excludes to the ros android plugin.
