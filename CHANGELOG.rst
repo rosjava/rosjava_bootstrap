@@ -2,8 +2,13 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.5 (2013-09-18)
+------------------
+* maven deployment path -> maven deployment repository.
+* bugfix install location.
+
+0.1.4 (2013-09-17)
+------------------
 * depend on message generation 0.1.+
 * use package.xml version.
 * run_depends for the build tools.
