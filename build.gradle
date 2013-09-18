@@ -20,7 +20,7 @@ task wrapper(type: Wrapper) {
 
 project.ext {
   /* the ros plugin defines this, but since we're building the plugin... */
-  rosMavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
+  rosMavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
   rosMavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
 }
 
@@ -49,10 +49,10 @@ subprojects {
             url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
         }
     }
-    if ( project.rosMavenDeploymentPath != 'null' && project.rosMavenDeploymentPath != '' ) {
+    if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
         uploadArchives {
             repositories.mavenDeployer {
-                repository(url: 'file://' + project.rosMavenDeploymentPath)
+                repository(url: 'file://' + project.rosMavenDeploymentRepository)
             }
         }
     }

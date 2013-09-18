@@ -8,7 +8,7 @@ import org.gradle.api.*;
  * Provides information about the ros workspace.
  *
  * - project.ros.mavenPath : location of local ros maven repositories (in your chained workspaces)
- * - project.ros.mavenDeploymentPath : location of the ros maven repository you will publish to
+ * - project.ros.mavenDeploymentRepository : location of the ros maven repository you will publish to
  *
  * It also performs the following actions
  * 
@@ -27,11 +27,11 @@ class RosPlugin implements Plugin<Project> {
         /* Create project.ros.* property extensions */
         project.extensions.create("ros", RosPluginExtension)
         project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
-        project.ros.mavenDeploymentPath = "$System.env.ROS_MAVEN_DEPLOYMENT_PATH"
-        if ( project.ros.mavenDeploymentPath != 'null' && project.ros.mavenDeploymentPath != '' ) {
+        project.ros.mavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
+        if ( project.ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
             project.uploadArchives {
                 repositories.mavenDeployer {
-                    repository(url: 'file://' + project.ros.mavenDeploymentPath)
+                    repository(url: 'file://' + project.ros.mavenDeploymentRepository)
                 }
             }
         }
@@ -56,5 +56,5 @@ class RosPlugin implements Plugin<Project> {
 
 class RosPluginExtension {
     List<String> mavenPath
-    String mavenDeploymentPath
+    String mavenDeploymentRepository
 }
