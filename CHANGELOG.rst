@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.6 (2013-09-22)
+------------------
+* disabling osgi.
+
 0.1.5 (2013-09-18)
 ------------------
 * maven deployment path -> maven deployment repository.
