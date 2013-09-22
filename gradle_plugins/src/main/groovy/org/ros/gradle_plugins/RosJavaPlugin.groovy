@@ -16,9 +16,11 @@ class RosJavaPlugin implements Plugin<Project> {
         if (!project.plugins.findPlugin('java')) {
             project.apply(plugin: 'java')
         }
+        /* Disabling for now - may be source of build farm problems
         if (!project.plugins.findPlugin('osgi')) {
             project.apply(plugin: 'osgi')
         }
+        */
         
         project.sourceCompatibility = 1.6
         project.targetCompatibility = 1.6
