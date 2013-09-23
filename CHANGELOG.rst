@@ -2,6 +2,11 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.7 (2013-09-23)
+------------------
+* use maven-publish plugin for publishing rosjava packages.
+* centralise last code snippets from android build.gradle's.
+
 0.1.6 (2013-09-22)
 ------------------
 * disabling osgi.
