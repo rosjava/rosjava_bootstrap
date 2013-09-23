@@ -26,13 +26,14 @@ project.ext {
 
 allprojects {
     group='org.ros.rosjava_bootstrap'
-    version = '0.1.5'
+    version = '0.1.6'
 }
 
 subprojects {
     /* Have to manually do this below since our gradle plugin is our sub project */
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
@@ -50,9 +51,16 @@ subprojects {
         }
     }
     if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
-        uploadArchives {
-            repositories.mavenDeployer {
-                repository(url: 'file://' + project.rosMavenDeploymentRepository)
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
+                }
+            }
+            repositories {
+                maven {
+                   url 'file://' + project.rosMavenDeploymentRepository 
+                }
             }
         }
     }

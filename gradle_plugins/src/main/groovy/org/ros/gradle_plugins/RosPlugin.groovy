@@ -22,19 +22,12 @@ class RosPlugin implements Plugin<Project> {
 	def void apply(Project project) {
 	    this.project = project
         if (!project.plugins.findPlugin('maven')) {
-            project.apply(plugin: org.gradle.api.plugins.MavenPlugin)
+            project.apply(plugin: 'maven')
         }
         /* Create project.ros.* property extensions */
         project.extensions.create("ros", RosPluginExtension)
         project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
         project.ros.mavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
-        if ( project.ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
-            project.uploadArchives {
-                repositories.mavenDeployer {
-                    repository(url: 'file://' + project.ros.mavenDeploymentRepository)
-                }
-            }
-        }
         /* 
          * Could use some better handling for when this is not defined as it sets
          * file://null, but it doesn't seem to hurt the process any

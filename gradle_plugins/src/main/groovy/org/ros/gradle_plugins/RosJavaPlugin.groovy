@@ -2,6 +2,7 @@ package org.ros.gradle_plugins;
 
 import org.gradle.api.Project;
 import org.gradle.api.Plugin;
+import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.*;
 
 /*
@@ -13,17 +14,36 @@ class RosJavaPlugin implements Plugin<Project> {
     
 	def void apply(Project project) {
 	    this.project = project
+        if (!project.plugins.findPlugin('ros')) {
+            project.apply(plugin: 'ros')
+        }
         if (!project.plugins.findPlugin('java')) {
             project.apply(plugin: 'java')
         }
-        /* Disabling for now - may be source of build farm problems
+        if (!project.plugins.findPlugin('maven-publish')) {
+            project.apply(plugin: 'maven-publish')
+        }
         if (!project.plugins.findPlugin('osgi')) {
             project.apply(plugin: 'osgi')
         }
-        */
         
         project.sourceCompatibility = 1.6
         project.targetCompatibility = 1.6
+
+        if ( project.ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
+            project.publishing {
+                publications {
+                    mavenJava(MavenPublication) {
+                        from project.components.java
+                    }
+                }
+                repositories {
+                    maven {
+                       url 'file://' + project.ros.mavenDeploymentRepository
+                    }
+                }
+            }
+        }
     }
 }
 
