@@ -43,6 +43,7 @@ class RosPlugin implements Plugin<Project> {
             maven {
                 url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
             }
+            mavenCentral()
         }
     }
 }
