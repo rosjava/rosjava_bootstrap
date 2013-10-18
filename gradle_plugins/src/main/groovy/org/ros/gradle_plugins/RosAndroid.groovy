@@ -17,7 +17,7 @@ class RosAndroidPlugin implements Plugin<Project> {
             project.apply(plugin: 'ros')
         }
         project.extensions.create("rosandroid", RosAndroidPluginExtension)
-        project.rosandroid.buildToolsVersion = "17"
+        project.rosandroid.buildToolsVersion = "18.1.1"
         /*********************************************************************
          * Find the android plugin
          *********************************************************************/ 
@@ -26,7 +26,7 @@ class RosAndroidPlugin implements Plugin<Project> {
                 mavenCentral()
             }
             dependencies {
-                classpath 'com.android.tools.build:gradle:0.5.6'
+                classpath 'com.android.tools.build:gradle:0.6.1'
             }
         }
         /********************************************************************** 
