@@ -15,7 +15,7 @@
  */
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.7'
+  gradleVersion = '1.8'
 }
 
 project.ext {
@@ -25,45 +25,45 @@ project.ext {
 }
 
 allprojects {
-    group='org.ros.rosjava_bootstrap'
-    version = '0.1.7'
+  group='org.ros.rosjava_bootstrap'
+  version = '0.1.7'
 }
 
 subprojects {
-    /* Have to manually do this below since our gradle plugin is our sub project */
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
+  /* Have to manually do this below since our gradle plugin is our sub project */
+  apply plugin: 'java'
+  apply plugin: 'maven'
+  apply plugin: 'maven-publish'
 
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
+  sourceCompatibility = 1.6
+  targetCompatibility = 1.6
 
-    def repoURLs = project.rosMavenPath.collect { 'file://' + it }
-    repositories {
-        repoURLs.each { p ->
-            maven {
-                url p
-            }
+  def repoURLs = project.rosMavenPath.collect { 'file://' + it }
+  repositories {
+    repoURLs.each { p ->
+      maven {
+        url p
+      }
+    }
+    mavenLocal()
+    maven {
+      url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
+    }
+  }
+  if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
+    publishing {
+      publications {
+        mavenJava(MavenPublication) {
+          from components.java
         }
-        mavenLocal()
+      }
+      repositories {
         maven {
-            url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
+           url 'file://' + project.rosMavenDeploymentRepository
         }
+      }
     }
-    if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
-        publishing {
-            publications {
-                mavenJava(MavenPublication) {
-                    from components.java
-                }
-            }
-            repositories {
-                maven {
-                   url 'file://' + project.rosMavenDeploymentRepository 
-                }
-            }
-        }
-    }
+  }
 }
 
 defaultTasks 'install'
