@@ -31,6 +31,7 @@ allprojects {
 
 subprojects {
   /* Have to manually do this below since our gradle plugin is our sub project */
+  apply plugin: 'eclipse'
   apply plugin: 'java'
   apply plugin: 'maven'
   apply plugin: 'maven-publish'
