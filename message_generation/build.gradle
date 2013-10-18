@@ -22,5 +22,6 @@ dependencies {
   compile 'commons-pool:commons-pool:1.6'
   compile 'org.apache.commons:com.springsource.org.apache.commons.lang:2.4.0'
   compile project(':gradle_plugins')
+  testCompile 'junit:junit:4.8.2'
 }
 
