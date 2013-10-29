@@ -22,6 +22,7 @@ project.ext {
   /* the ros plugin defines this, but since we're building the plugin... */
   rosMavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
   rosMavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
+  rosMavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
 }
 
 allprojects {
@@ -47,7 +48,7 @@ subprojects {
     }
     mavenLocal()
     maven {
-      url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
+      url project.rosMavenRepository
     }
   }
   if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
