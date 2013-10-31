@@ -2,7 +2,7 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.1.10 (2013-10-31)
+0.1.11 (2013-10-31)
 ------------------
 * catkin tree generator now takes latest versions only.
 
