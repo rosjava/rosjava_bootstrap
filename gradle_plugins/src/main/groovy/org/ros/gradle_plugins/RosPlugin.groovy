@@ -27,6 +27,7 @@ class RosPlugin implements Plugin<Project> {
         /* Create project.ros.* property extensions */
         project.extensions.create("ros", RosPluginExtension)
         project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
+        project.ros.mavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
         project.ros.mavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
         /* 
          * Could use some better handling for when this is not defined as it sets
@@ -41,7 +42,7 @@ class RosPlugin implements Plugin<Project> {
             }
             mavenLocal()
             maven {
-                url 'https://github.com/rosjava/rosjava_mvn_repo/raw/master'
+                url project.ros.mavenRepository
             }
             mavenCentral()
         }
