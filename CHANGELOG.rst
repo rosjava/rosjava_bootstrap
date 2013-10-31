@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.10 (2013-10-31)
+------------------
+* catkin tree generator now takes latest versions only.
+
 0.1.9 (2013-10-31)
 ------------------
 * utilise ROS_MAVEN_REPOSITORY
