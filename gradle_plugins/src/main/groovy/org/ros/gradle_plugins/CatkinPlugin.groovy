@@ -146,9 +146,32 @@ class CatkinPackage {
     
     def void generateMessageArtifact(Project p) {
         p.version = version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.1,)')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.1,0.2)')
         messageDependencies().each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
+        }
+        def generatedSourcesDir = "${p.buildDir}/generated-src"
+        def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
+        generateSourcesTask.description = "Generate sources for " + name
+        generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
+        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, name])
+        generateSourcesTask.classpath = p.configurations.runtime
+        generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
+        p.tasks.compileJava.source generateSourcesTask.outputs.files
+    }
+
+    def void generateUnofficialMessageArtifact(Project p) {
+        /* Couple of constraints here:
+             1) maven group forced to org.ros.rosjava_messages to that all message artifact
+                dependencies are easily found.
+             2) Open ended dependency range (takes the latest in ROS_PACKAGE_PATH) since we
+                don't know the artifact versions the user really wants.
+        */
+        p.version = version
+        p.group = 'org.ros.rosjava_messages'
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.1,0.2)')
+        messageDependencies().each { d ->
+            p.dependencies.add("compile", 'org.ros.rosjava_messages:' + d + ':[0.1,)')
         }
         def generatedSourcesDir = "${p.buildDir}/generated-src"
         def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
@@ -166,7 +189,7 @@ class CatkinPackage {
      */
     def void generateMessageArtifactInSubFolder(Project p, String subfolderName, List<String> dependencies) {
         // p.version = version use the subfolder's project version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.1,)')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.1,0.2)')
         dependencies.each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
