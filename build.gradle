@@ -27,7 +27,7 @@ project.ext {
 
 allprojects {
   group='org.ros.rosjava_bootstrap'
-  version = '0.1.11'
+  version = '0.1.12'
 }
 
 subprojects {
