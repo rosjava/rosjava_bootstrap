@@ -2,6 +2,14 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.0 (2013-10-25)
+------------------
+* official maven style open ranged dependencies
+* gradle 1.7-1.8
+* android build tools 17-18.1.1
+* message generation tests moved in
+* eclipse support
+
 0.1.7 (2013-09-23)
 ------------------
 * use maven-publish plugin for publishing rosjava packages.

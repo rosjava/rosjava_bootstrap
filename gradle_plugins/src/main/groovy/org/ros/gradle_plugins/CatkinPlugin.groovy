@@ -86,12 +86,18 @@ class CatkinPackages {
     
     def generate() {
         if ( this.pkgs.size() == 0 ) {
-            println("Catkin plugin is generating the catkin package tree...")
             this.workspaces.each { workspace ->
                 def manifestTree = project.fileTree(dir: workspace, include: '**/package.xml')
                 manifestTree.each { file -> 
                     def pkg = new CatkinPackage(file)
-                    this.pkgs.put(pkg.name, pkg)
+                    if(this.pkgs.containsKey(pkg.name)) {
+                        if(this.pkgs[pkg.name].version < pkg.version) {
+                            println("Catkin generate tree: replacing older version of " + pkg.name + "[" + this.pkgs[pkg.name].version + "->" + pkg.version + "]") 
+                            this.pkgs[pkg.name] = pkg
+                        }
+                    } else {
+                        this.pkgs.put(pkg.name, pkg)
+                    }
                 }
             }
         }
@@ -140,7 +146,7 @@ class CatkinPackage {
     
     def void generateMessageArtifact(Project p) {
         p.version = version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.+')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)')
         messageDependencies().each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
@@ -160,7 +166,7 @@ class CatkinPackage {
      */
     def void generateMessageArtifactInSubFolder(Project p, String subfolderName, List<String> dependencies) {
         // p.version = version use the subfolder's project version
-        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:0.1.+')
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)')
         dependencies.each { d ->
             p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
         }
