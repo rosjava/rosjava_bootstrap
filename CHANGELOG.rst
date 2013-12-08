@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.13 [2013-12-08]
+------------------
+* fix unofficial message package internal/external dependency configuration.
+
 0.1.12 [2013-11-08]
 ------------------
 * fix single artifact message generation when there is dependencies.
