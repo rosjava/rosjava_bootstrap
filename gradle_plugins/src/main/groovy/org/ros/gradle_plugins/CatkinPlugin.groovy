@@ -171,7 +171,11 @@ class CatkinPackage {
         p.group = 'org.ros.rosjava_messages'
         p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)')
         messageDependencies().each { d ->
-            p.dependencies.add("compile", 'org.ros.rosjava_messages:' + d + ':[0.1,)')
+            if ( p.getParent().getChildProjects().containsKey(d) ) {
+                p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
+            } else {
+                p.dependencies.add("compile", 'org.ros.rosjava_messages:' + d + ':[0.1,)')
+            }
         }
         def generatedSourcesDir = "${p.buildDir}/generated-src"
         def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
