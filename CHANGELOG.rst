@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.14 [2013-12-11]
+------------------
+* stop unofficial message generation accidentally picking up older versions of packages.
+
 0.1.13 [2013-12-08]
 ------------------
 * fix unofficial message package internal/external dependency configuration.
