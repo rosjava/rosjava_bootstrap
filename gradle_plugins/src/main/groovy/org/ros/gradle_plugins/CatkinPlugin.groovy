@@ -108,9 +108,11 @@ class CatkinPackage {
     def name
     def version
     def dependencies
+    def directory
     
     def CatkinPackage(File packageXmlFilename) {
         def packageXml = new XmlParser().parse(packageXmlFilename)
+        directory = packageXmlFilename.parent
         name = packageXml.name.text()
         version = packageXml.version.text()
         dependencies = []
@@ -181,7 +183,7 @@ class CatkinPackage {
         def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
         generateSourcesTask.description = "Generate sources for " + name
         generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
-        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, name])
+        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, '--package-path=' + directory, name])
         generateSourcesTask.classpath = p.configurations.runtime
         generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
         p.tasks.compileJava.source generateSourcesTask.outputs.files
