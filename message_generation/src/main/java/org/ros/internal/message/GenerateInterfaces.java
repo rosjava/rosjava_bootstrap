@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
@@ -69,7 +70,6 @@ public class GenerateInterfaces {
       packages = topicDefinitionFileProvider.getPackages();
     }
     for (String pkg : packages) {
-    	System.out.println("Package: " + pkg);
       Collection<MessageIdentifier> messageIdentifiers =
           topicDefinitionFileProvider.getMessageIdentifiersByPackage(pkg);
       if (messageIdentifiers != null) {
@@ -159,6 +159,15 @@ public class GenerateInterfaces {
       arguments.add(".");
     }
     String rosPackagePath = System.getenv(ROS_PACKAGE_PATH);
+    // Overwrite with a supplied package path if specified (--package-path=)
+    for (ListIterator<String> iter = arguments.listIterator(); iter.hasNext(); ) {
+    	String arg = iter.next();
+    	if (arg.contains("--package-path=")) {
+    		rosPackagePath = arg.replace("--package-path=", "");
+    		iter.remove();
+    		break;
+    	}
+    }
     Collection<File> packagePath = Lists.newArrayList();
     for (String path : rosPackagePath.split(File.pathSeparator)) {
       File packageDirectory = new File(path);
