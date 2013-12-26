@@ -102,6 +102,51 @@ class CatkinPackages {
             }
         }
     }
+    
+    def isMessagePackage(String package_name) {
+        def pkg
+        def result = false
+        try {
+            pkg = this.pkgs[package_name]
+            pkg.dependencies.each { d ->
+                if ( d.equalsIgnoreCase("message_generation") ) {
+                    result = true
+                }
+            }
+        } catch (NullPointerException e) {
+            /* Not a catkin package dependency (e.g. boost), ignore */
+            result = false
+        }
+        return result
+    }
+
+    def void generateMessageArtifact(Project p, String package_name) {
+        def pkg = this.pkgs[package_name]
+        p.version = pkg.version
+        p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)')
+        List<String> messageDependencies = []
+        pkg.dependencies.each { d ->
+            if ( this.isMessagePackage(d) ) {
+                messageDependencies.add(d)
+            } else {
+            }
+        }
+        messageDependencies.each { d ->
+            if ( p.getParent().getChildProjects().containsKey(d) ) {
+                p.dependencies.add("compile", p.dependencies.project(path: ':' + d))
+            } else {
+                p.dependencies.add("compile", 'org.ros.rosjava_messages:' + d + ':[0.0,)')
+            }
+        }
+        def generatedSourcesDir = "${p.buildDir}/generated-src"
+        def generateSourcesTask = p.tasks.create("generateSources", JavaExec)
+        generateSourcesTask.description = "Generate sources for " + pkg.name
+        generateSourcesTask.outputs.dir(p.file(generatedSourcesDir))
+        generateSourcesTask.args = new ArrayList<String>([generatedSourcesDir, '--package-path=' + pkg.directory, pkg.name])
+        generateSourcesTask.classpath = p.configurations.runtime
+        generateSourcesTask.main = 'org.ros.internal.message.GenerateInterfaces'
+        p.tasks.compileJava.source generateSourcesTask.outputs.files
+    }
 }
 
 class CatkinPackage {
@@ -134,6 +179,8 @@ class CatkinPackage {
      * Find and annotate a list of package package dependencies.
      * Useful for message artifact generation).
      *
+     * Depracated, but kept around for legacy purposes, remove in igloo
+     *
      * @return List<String> : dependencies (package name strings)  
      */
     def List<String> messageDependencies() {
@@ -145,7 +192,8 @@ class CatkinPackage {
         }
         return msgDependencies
     }
-    
+
+    /* Depracated, but kept around for legacy purposes, remove in igloo */    
     def void generateMessageArtifact(Project p) {
         p.version = version
         p.dependencies.add("compile", 'org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)')
@@ -162,6 +210,7 @@ class CatkinPackage {
         p.tasks.compileJava.source generateSourcesTask.outputs.files
     }
 
+    /* Depracated, but kept around for legacy purposes, remove in igloo */
     def void generateUnofficialMessageArtifact(Project p) {
         /* Couple of constraints here:
              1) maven group forced to org.ros.rosjava_messages to that all message artifact
