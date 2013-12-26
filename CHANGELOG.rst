@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.16 [2013-12-26]
+------------------
+* android plugin 0.6.1 -> 0.7.1
+
 0.1.15 [2013-12-26]
 ------------------
 * message generation now has a single api for official and unofficial releases
