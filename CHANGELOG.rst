@@ -2,6 +2,12 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.15 [2013-12-26]
+------------------
+* message generation now has a single api for official and unofficial releases
+* message generation api smart enough to work out internal or external dependencies
+* fix dependency problems on non xxx_msg packages - i.e. check for build_depends on message_generation
+
 0.1.14 [2013-12-11]
 ------------------
 * stop unofficial message generation accidentally picking up older versions of packages.
