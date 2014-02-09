@@ -2,30 +2,35 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.17 (2014-02-09)
+-------------------
+* set default maven repo if variable is empty and bugfix dynamic property warnings.
+* Contributors: Daniel Stonier
+
 0.1.16 [2013-12-26]
-------------------
+-------------------
 * android plugin 0.6.1 -> 0.7.1
 
 0.1.15 [2013-12-26]
-------------------
+-------------------
 * message generation now has a single api for official and unofficial releases
 * message generation api smart enough to work out internal or external dependencies
 * fix dependency problems on non xxx_msg packages - i.e. check for build_depends on message_generation
 
 0.1.14 [2013-12-11]
-------------------
+-------------------
 * stop unofficial message generation accidentally picking up older versions of packages.
 
 0.1.13 [2013-12-08]
-------------------
+-------------------
 * fix unofficial message package internal/external dependency configuration.
 
 0.1.12 [2013-11-08]
-------------------
+-------------------
 * fix single artifact message generation when there is dependencies.
 
 0.1.11 (2013-10-31)
-------------------
+-------------------
 * catkin tree generator now takes latest versions only.
 
 0.1.9 (2013-10-31)
