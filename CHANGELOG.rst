@@ -2,7 +2,7 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.1.17 (2014-02-09)
+0.1.18 (2014-02-09)
 -------------------
 * set default maven repo if variable is empty and bugfix dynamic property warnings.
 * Contributors: Daniel Stonier
