@@ -12,8 +12,8 @@ import org.gradle.api.*;
  *
  * It also performs the following actions
  * 
- * - checks and maeks sure the maven plugin is running
- * - constructs the sequence of dependant maven repos (local ros maven repos, mavenLocal, external ros maven repo)
+ * - checks and makes sure the maven plugin is running
+ * - constructs the sequence of dependent maven repos (local ros maven repos, mavenLocal, external ros maven repo)
  * - configures the uploadArchives for artifact deployment to the local ros maven repo (devel/share/maven)
  */
 class RosPlugin implements Plugin<Project> {
@@ -57,12 +57,10 @@ class RosExtension {
     List<String> mavenPath
     String mavenDeploymentRepository
     String mavenRepository
-    String mavenRepositoryD
     
     RosExtension() {
         /* Initialising the strings here gets rid of the dynamic property deprecated warnings. */
         this.mavenDeploymentRepository = ""
         this.mavenRepository = "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
-        this.mavenRepositoryD = "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
     }
 }
