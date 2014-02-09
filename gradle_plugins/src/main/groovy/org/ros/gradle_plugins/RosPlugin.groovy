@@ -25,10 +25,13 @@ class RosPlugin implements Plugin<Project> {
             project.apply(plugin: 'maven')
         }
         /* Create project.ros.* property extensions */
-        project.extensions.create("ros", RosPluginExtension)
+        project.extensions.create("ros", RosExtension)
         project.ros.mavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
-        project.ros.mavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
         project.ros.mavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
+        def mavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
+        if ( mavenRepository != 'null' ) {
+            project.ros.mavenRepository = mavenRepository
+        }
         /* 
          * Could use some better handling for when this is not defined as it sets
          * file://null, but it doesn't seem to hurt the process any
@@ -49,7 +52,15 @@ class RosPlugin implements Plugin<Project> {
     }
 }
 
-class RosPluginExtension {
+/* http://www.gradle.org/docs/nightly/dsl/org.gradle.api.plugins.ExtensionAware.html */
+class RosExtension {
     List<String> mavenPath
     String mavenDeploymentRepository
+    String mavenRepository
+    
+    RosExtension() {
+        /* Initialising the strings here gets rid of the dynamic property deprecated warnings. */
+        this.mavenDeploymentRepository = ""
+        this.mavenRepository = "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+    }
 }
