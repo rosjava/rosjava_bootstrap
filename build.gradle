@@ -15,44 +15,53 @@
  */
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.8'
+  gradleVersion = "1.9"
 }
 
 project.ext {
-  /* the ros plugin defines this, but since we're building the plugin... */
-  rosMavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
-  rosMavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
-  rosMavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
+  rosMavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
+  rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+  rosMavenPath = System.getenv("ROS_MAVEN_PATH")
 }
 
 allprojects {
-  group='org.ros.rosjava_bootstrap'
-  version = '0.2.0'
+  group = "org.ros.rosjava_bootstrap"
+  version = "0.2.0"
 }
 
 subprojects {
-  /* Have to manually do this below since our gradle plugin is our sub project */
-  apply plugin: 'eclipse'
-  apply plugin: 'java'
-  apply plugin: 'maven'
-  apply plugin: 'maven-publish'
+  apply plugin: "eclipse"
+  apply plugin: "java"
+  apply plugin: "maven"
+  apply plugin: "maven-publish"
 
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
 
-  def repoURLs = project.rosMavenPath.collect { 'file://' + it }
   repositories {
-    repoURLs.each { p ->
+    if (project.rosMavenPath != null) {
+      project.rosMavenPath.tokenize(":").each { path ->
+        maven {
+          url uri(path)
+        }
+      }
+    }
+    if (project.rosMavenRepository != null) {
       maven {
-        url p
+        url project.rosMavenRepository
       }
     }
     mavenLocal()
     maven {
-      url project.rosMavenRepository
+      url "http://repository.springsource.com/maven/bundles/release"
     }
+    maven {
+      url "http://repository.springsource.com/maven/bundles/external"
+    }
+    mavenCentral()
   }
-  if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
+  if (project.rosMavenDeploymentRepository != null &&
+      project.rosMavenDeploymentRepository != "") {
     publishing {
       publications {
         mavenJava(MavenPublication) {
@@ -61,11 +70,11 @@ subprojects {
       }
       repositories {
         maven {
-           url 'file://' + project.rosMavenDeploymentRepository
+           url uri(project.rosMavenDeploymentRepository)
         }
       }
     }
   }
 }
 
-defaultTasks 'install'
+defaultTasks "install"

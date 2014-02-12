@@ -14,9 +14,9 @@
  * the License.
  */
 
-apply plugin: 'groovy'
+apply plugin: "groovy"
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
+  compile gradleApi()
+  compile "org.codehaus.groovy:groovy-all:2.2.0"
 }
