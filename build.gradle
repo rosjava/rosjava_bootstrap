@@ -18,12 +18,6 @@ task wrapper(type: Wrapper) {
   gradleVersion = "1.9"
 }
 
-project.ext {
-  rosMavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
-  rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
-  rosMavenPath = System.getenv("ROS_MAVEN_PATH")
-}
-
 allprojects {
   group = "org.ros.rosjava_bootstrap"
   version = "0.2.0"
@@ -38,17 +32,16 @@ subprojects {
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
 
+  def rosMavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
+  def rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+  def rosMavenPath = System.getenv("ROS_MAVEN_PATH")
+
   repositories {
-    if (project.rosMavenPath != null) {
-      project.rosMavenPath.tokenize(":").each { path ->
+    if (rosMavenPath != null) {
+      rosMavenPath.tokenize(":").each { path ->
         maven {
           url uri(path)
         }
-      }
-    }
-    if (project.rosMavenRepository != null) {
-      maven {
-        url project.rosMavenRepository
       }
     }
     mavenLocal()
@@ -58,10 +51,19 @@ subprojects {
     maven {
       url "http://repository.springsource.com/maven/bundles/external"
     }
+    if (rosMavenRepository != null) {
+      maven {
+        url rosMavenRepository
+      }
+    } else {
+      maven {
+        url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+      }
+    }
     mavenCentral()
   }
-  if (project.rosMavenDeploymentRepository != null &&
-      project.rosMavenDeploymentRepository != "") {
+  if (rosMavenDeploymentRepository != null &&
+      rosMavenDeploymentRepository != "") {
     publishing {
       publications {
         mavenJava(MavenPublication) {
@@ -70,11 +72,11 @@ subprojects {
       }
       repositories {
         maven {
-           url uri(project.rosMavenDeploymentRepository)
+           url uri(rosMavenDeploymentRepository)
         }
       }
     }
   }
 }
 
-defaultTasks "install"
+defaultTasks "publishMavenJavaPublicationToMavenRepository"
