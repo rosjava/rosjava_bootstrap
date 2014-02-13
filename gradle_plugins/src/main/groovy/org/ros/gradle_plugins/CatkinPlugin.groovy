@@ -23,7 +23,7 @@ import org.gradle.api.*;
  *     println d
  *   }
  *   // filtered list of *_msg dependencies.
- *   pkg.messageDependencies().each { d ->
+ *   pkg.getMessageDependencies().each { d ->
  *     println d
  *   }
  * }
@@ -32,7 +32,7 @@ import org.gradle.api.*;
  * only generate the properties once and share them this way.
  */
 class CatkinPlugin implements Plugin<Project> {
-	def void apply(Project project) {
+  def void apply(Project project) {
 	  project.extensions.create("catkin", CatkinPluginExtension)
 
     def workspaces = System.getenv("ROS_PACKAGE_PATH")
@@ -48,7 +48,7 @@ class CatkinPlugin implements Plugin<Project> {
     if (!packageXml.exists()) {
       throw new StopActionException("Missing package.xml for project: ${project}")
     }
-    project.catkin.pkg = new CatkinPackage(packageXml)
+    project.catkin.pkg = new CatkinPackage(project, packageXml)
 
     project.task("catkinPackageInfo") << {
       println "Catkin Workspaces: ${project.catkin.workspaces}"
@@ -64,26 +64,31 @@ class CatkinPluginExtension {
 }
 
 class CatkinPackages {
-  def Map<String, CatkinPackage> pkgs
-  def List<String> workspaces
-  def Project project
 
-  def CatkinPackages(Project project, List<String> workspaces) {
+  Map<String, CatkinPackage> pkgs
+  List<String> workspaces
+  Project project
+
+  CatkinPackages(Project project, List<String> workspaces) {
     this.project = project
     this.workspaces = workspaces
     pkgs = [:]
   }
 
-  def generate() {
+  void generate() {
     if (pkgs.size() == 0) {
       workspaces.each { workspace ->
-        def manifestTree = project.fileTree(dir: workspace, include: "**/package.xml")
+        def manifestTree = project.fileTree(dir: workspace,
+                                            include: "**/package.xml")
         manifestTree.each {
-          def pkg = new CatkinPackage(it)
+          def pkg = new CatkinPackage(project, it)
           if (pkgs.containsKey(pkg.name)) {
+            // TODO(damonkohler): This comparison probably doesn't work since
+            // versions are strings.
             if (pkgs[pkg.name].version < pkg.version) {
-              println("Replacing " + pkg.name + " version " + pkgs[pkg.name].version +
-                      " with version " + pkg.version + ".")
+              println("Replacing " + pkg.name + " version " +
+                      pkgs[pkg.name].version + " with version " + pkg.version +
+                      ".")
               pkgs[pkg.name] = pkg
             }
           } else {
@@ -96,44 +101,51 @@ class CatkinPackages {
 }
 
 class CatkinPackage {
-  def name
-  def version
-  def dependencies
 
-  def CatkinPackage(File packageXmlFilename) {
+  Project project
+  String name
+  String version
+  Set<String> dependencies
+
+  CatkinPackage(Project project, File packageXmlFilename) {
+    this.project = project
     println "Loading " + packageXmlFilename
     def packageXml = new XmlParser().parse(packageXmlFilename)
     name = packageXml.name.text()
     version = packageXml.version.text()
-    dependencies = packageXml.build_depend.collect({ it.text() })
+    dependencies = packageXml.build_depend.collect{ it.text() }
   }
 
   String toString() { "${name} ${version} ${dependencies}" }
 
-  /*
-   * Find and annotate a list of package package dependencies.
-   * Useful for message artifact generation).
-   *
-   * @return List<String> : dependencies (package name strings)
-   */
-  Set<String> messageDependencies(Project project, Collection<String> dependencies) {
+  Set<String> getTransitiveDependencies(Collection<String> dependencies) {
     Set<String> result = [];
     dependencies.each {
       if (project.catkin.tree.pkgs.containsKey(it)) {
-        if (it.contains("_msgs") || it.contains("_srvs")) {
-          result.add(it)
-        }
-        result.addAll(messageDependencies(project, project.catkin.tree.pkgs[it].dependencies))
+        result.add(it)
+        result.addAll(getTransitiveDependencies(
+            project.catkin.tree.pkgs[it].dependencies))
       }
     }
     return result
   }
 
+  Set<String> getMessageDependencies() {
+    getTransitiveDependencies(dependencies).findAll {
+      project.catkin.tree.pkgs.containsKey(it) &&
+      project.catkin.tree.pkgs[it].dependencies.contains("message_generation")
+    } as Set
+  }
+
   void generateMessageArtifact(Project project) {
     project.version = version
     project.dependencies.add("compile", "org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)")
-    messageDependencies(project, dependencies).each {
-      project.dependencies.add("compile", project.dependencies.project(path: ":${it}"))
+    getMessageDependencies().each {
+      if (project.getParent().getChildProjects().containsKey(it)) {
+        project.dependencies.add("compile", project.dependencies.project(path: ":${it}"))
+      } else {
+        project.dependencies.add("compile", "org.ros.rosjava_messages:${it}:[0.0,)")
+      }
     }
     def generatedSourcesDir = "${project.buildDir}/generated-src"
     def generateSourcesTask = project.tasks.create("generateSources", JavaExec)
@@ -155,8 +167,8 @@ class CatkinPackage {
     project.version = version
     project.group = "org.ros.rosjava_messages"
     project.dependencies.add("compile", "org.ros.rosjava_bootstrap:message_generation:[0.2,0.3)")
-    messageDependencies(project, dependencies).each { d ->
-      project.dependencies.add("compile", "org.ros.rosjava_messages:" + d + ":[0.1,)")
+    getMessageDependencies().each {
+      project.dependencies.add("compile", "org.ros.rosjava_messages:${it}:[0.1,)")
     }
     def generatedSourcesDir = "${project.buildDir}/generated-src"
     def generateSourcesTask = project.tasks.create("generateSources", JavaExec)

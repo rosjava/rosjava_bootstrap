@@ -3,8 +3,8 @@ package org.ros.gradle_plugins;
 import org.gradle.api.*;
 import org.gradle.api.publish.maven.MavenPublication;
 
-/*
- * Provides information about the ros workspace.
+/**
+ * Configures a Java project for use with ROS.
  *
  * - project.ros.mavenPath : location of local ros maven repositories (in your chained workspaces)
  * - project.ros.mavenDeploymentRepository : location of the ros maven repository you will publish to
@@ -16,10 +16,8 @@ import org.gradle.api.publish.maven.MavenPublication;
  * - configures the uploadArchives for artifact deployment to the local ros maven repo (devel/share/maven)
  */
 class RosPlugin implements Plugin<Project> {
-  Project project
 
   def void apply(Project project) {
-    this.project = project
     project.apply plugin: "eclipse"
     project.apply plugin: "java"
     project.apply plugin: "maven"
