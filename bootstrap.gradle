@@ -14,38 +14,32 @@
  * the License.
  */
 
-buildscript {
-  def rosMavenPath = System.getenv("ROS_MAVEN_PATH")
-  def rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+String rosMavenPath = System.getenv("ROS_MAVEN_PATH")
+String rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
 
-  repositories {
-    if (rosMavenPath != null) {
-      rosMavenPath.tokenize(":").each { path ->
-        maven {
-          url uri(path)
-        }
-      }
-    }
-    mavenLocal()
-    maven {
-      url "http://repository.springsource.com/maven/bundles/release"
-    }
-    maven {
-      url "http://repository.springsource.com/maven/bundles/external"
-    }
-    if (rosMavenRepository != null) {
+repositories {
+  if (rosMavenPath != null) {
+    rosMavenPath.tokenize(":").each { path ->
       maven {
-        url rosMavenRepository
-      }
-    } else {
-      maven {
-        url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+        url uri(path)
       }
     }
-    mavenCentral()
   }
-
-  dependencies {
-    classpath group: "org.ros.rosjava_bootstrap", name: "gradle_plugins", version: "0.2.0"
+  mavenLocal()
+  maven {
+    url "http://repository.springsource.com/maven/bundles/release"
   }
+  maven {
+    url "http://repository.springsource.com/maven/bundles/external"
+  }
+  if (rosMavenRepository != null) {
+    maven {
+      url rosMavenRepository
+    }
+  } else {
+    maven {
+      url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+    }
+  }
+  mavenCentral()
 }
