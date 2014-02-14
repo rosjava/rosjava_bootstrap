@@ -13,7 +13,7 @@ class RosAndroidPlugin implements Plugin<Project> {
     project.extensions.create("rosandroid", RosAndroidPluginExtension)
     project.rosandroid.buildToolsVersion = "18.1.1"
 
-    //Find the android plugin
+    // Find the Android plugin.
     project.buildscript {
       repositories {
         mavenCentral()
