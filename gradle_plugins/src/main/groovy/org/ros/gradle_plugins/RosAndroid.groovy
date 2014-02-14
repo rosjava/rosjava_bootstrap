@@ -8,7 +8,7 @@ import java.util.HashMap
  * Configures ROS on Android build environment.
  */
 class RosAndroidPlugin implements Plugin<Project> {
-	void apply(Project project) {
+  void apply(Project project) {
     project.apply plugin: "ros"
     project.extensions.create("rosandroid", RosAndroidPluginExtension)
     project.rosandroid.buildToolsVersion = "18.1.1"
