@@ -18,14 +18,7 @@ import org.gradle.api.publish.maven.MavenPublication;
 class RosPlugin implements Plugin<Project> {
 
   def void apply(Project project) {
-    project.apply plugin: "eclipse"
-    project.apply plugin: "java"
     project.apply plugin: "maven"
-    project.apply plugin: "maven-publish"
-    project.apply plugin: "osgi"
-
-    project.sourceCompatibility = 1.6
-    project.targetCompatibility = 1.6
 
     project.extensions.create("ros", RosPluginExtension)
 
@@ -62,16 +55,9 @@ class RosPlugin implements Plugin<Project> {
 
     if (project.ros.mavenDeploymentRepository != null &&
         project.ros.mavenDeploymentRepository != "") {
-      project.publishing {
-        publications {
-          mavenJava(MavenPublication) {
-            from project.components.java
-          }
-        }
-        repositories {
-          maven {
-            url project.uri(project.ros.mavenDeploymentRepository)
-          }
+      project.uploadArchives {
+        repositories.mavenDeployer {
+          repository(url: project.uri(project.ros.mavenDeploymentRepository))
         }
       }
     }

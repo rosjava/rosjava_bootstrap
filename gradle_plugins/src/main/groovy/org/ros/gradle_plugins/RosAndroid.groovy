@@ -11,28 +11,10 @@ class RosAndroidPlugin implements Plugin<Project> {
   void apply(Project project) {
     project.apply plugin: "ros"
     project.extensions.create("rosandroid", RosAndroidPluginExtension)
-    project.rosandroid.buildToolsVersion = "18.1.1"
-
-    // Find the Android plugin.
-    project.buildscript {
-      repositories {
-        mavenCentral()
-      }
-      dependencies {
-        classpath "com.android.tools.build:gradle:0.7.1"
-      }
-    }
-
-    // Note that we're using old style here. Upgrade to maven-publish once they
-    // have support: https://github.com/rosjava/rosjava_bootstrap/issues/1
-    project.uploadArchives {
-      repositories.mavenDeployer {
-        repository(url: uri(project.ros.mavenDeploymentRepository))
-      }
-    }
+    project.rosandroid.buildToolsVersion = "19"
 
     // Our Maven repo 2rd parties are currently incompatible with Android JUnit.
-    project.configurations.create("compile")
+    project.configurations.maybeCreate("compile")
     project.configurations.compile.exclude "group": "junit"
     project.configurations.compile.exclude "group": "xml-apis"
 
@@ -41,6 +23,9 @@ class RosAndroidPlugin implements Plugin<Project> {
     project.afterEvaluate {
       project.android {
         buildToolsVersion project.rosandroid.buildToolsVersion
+        lintOptions {
+          disable "InvalidPackage"
+        }
       }
     }
   }
