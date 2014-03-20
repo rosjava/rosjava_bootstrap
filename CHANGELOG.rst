@@ -2,6 +2,11 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.20 (2014-03-20)
+-------------------
+* Trim maven repository list and backup with maven central.
+* Contributors: Daniel Stonier
+
 0.1.19 (2014-03-19)
 -------------------
 * gradle 1.11, buildTools 19.0.3, gradle android plugin 0.9.+

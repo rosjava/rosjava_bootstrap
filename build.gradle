@@ -39,17 +39,12 @@ subprojects {
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
 
-  def repoURLs = project.rosMavenPath.collect { 'file://' + it }
   repositories {
-    repoURLs.each { p ->
-      maven {
-        url p
-      }
-    }
     mavenLocal()
     maven {
       url project.rosMavenRepository
     }
+    mavenCentral()
   }
   if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
     publishing {
