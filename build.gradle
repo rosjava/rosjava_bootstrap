@@ -15,57 +15,44 @@
  */
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.8'
-}
-
-project.ext {
-  /* the ros plugin defines this, but since we're building the plugin... */
-  rosMavenDeploymentRepository = "$System.env.ROS_MAVEN_DEPLOYMENT_REPOSITORY"
-  rosMavenPath = "$System.env.ROS_MAVEN_PATH".split(':')
-  rosMavenRepository = "$System.env.ROS_MAVEN_REPOSITORY"
+  gradleVersion = "1.10"
 }
 
 allprojects {
-  group='org.ros.rosjava_bootstrap'
-  version = '0.2.0'
+  group = "org.ros.rosjava_bootstrap"
+  version = "0.2.0"
 }
 
 subprojects {
-  /* Have to manually do this below since our gradle plugin is our sub project */
-  apply plugin: 'eclipse'
-  apply plugin: 'java'
-  apply plugin: 'maven'
-  apply plugin: 'maven-publish'
+  apply plugin: "java"
+  apply plugin: "maven"
+
+  // These external repositories are copied from bootstrap.gradle.
+  repositories {
+    mavenCentral()
+    maven {
+      url "http://repository.springsource.com/maven/bundles/release"
+    }
+    maven {
+      url "http://repository.springsource.com/maven/bundles/external"
+    }
+  }
 
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
 
-  def repoURLs = project.rosMavenPath.collect { 'file://' + it }
-  repositories {
-    repoURLs.each { p ->
-      maven {
-        url p
+  // Configuration of the deployment repository is copied from the RosPlugin.
+  String mavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
+  if (mavenDeploymentRepository != null &&
+      mavenDeploymentRepository != "") {
+    project.uploadArchives {
+      repositories.mavenDeployer {
+        repository(url: project.uri(mavenDeploymentRepository))
       }
     }
-    mavenLocal()
-    maven {
-      url project.rosMavenRepository
-    }
-  }
-  if ( project.rosMavenDeploymentRepository != 'null' && project.rosMavenDeploymentRepository != '' ) {
-    publishing {
-      publications {
-        mavenJava(MavenPublication) {
-          from components.java
-        }
-      }
-      repositories {
-        maven {
-           url 'file://' + project.rosMavenDeploymentRepository
-        }
-      }
-    }
+  } else {
+    logger.warn("ROS_MAVEN_DEPLOYMENT_REPOSITORY is not set. Have you sourced setup.bash?")
   }
 }
 
-defaultTasks 'install'
+defaultTasks "uploadArchives"
