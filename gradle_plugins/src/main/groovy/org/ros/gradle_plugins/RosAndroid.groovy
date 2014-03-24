@@ -11,7 +11,7 @@ class RosAndroidPlugin implements Plugin<Project> {
   void apply(Project project) {
     project.apply plugin: "ros"
     project.extensions.create("rosandroid", RosAndroidPluginExtension)
-    project.rosandroid.buildToolsVersion = "19"
+    project.rosandroid.buildToolsVersion = "19.0.3"
 
     // Our Maven repo 2rd parties are currently incompatible with Android JUnit.
     project.configurations.maybeCreate("compile")
