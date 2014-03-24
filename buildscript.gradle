@@ -14,10 +14,10 @@
  * the License.
  */
 
-String rosMavenPath = System.getenv("ROS_MAVEN_PATH")
-String rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
-
 rootProject.buildscript {
+  String rosMavenPath = System.getenv("ROS_MAVEN_PATH")
+  String rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+
   repositories {
     // TODO(damonkohler): Specify a single local ROS repo only. We shouldn't
     // need multiple repos.
