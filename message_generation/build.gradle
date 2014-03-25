@@ -24,3 +24,5 @@ dependencies {
   testCompile "junit:junit:4.8.2"
 }
 
+apply plugin: "application"
+mainClassName = "org.ros.internal.message.GenerateInterfaces"
