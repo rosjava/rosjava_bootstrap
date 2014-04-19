@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
+ * @author mick.gaillard@gmail.com (Mickael Gaillard)
  */
 public enum PrimitiveFieldType implements FieldType {
 
@@ -571,7 +572,7 @@ public enum PrimitiveFieldType implements FieldType {
     @Override
     public <T> void serialize(T value, ChannelBuffer buffer) {
       Preconditions.checkArgument(value instanceof String);
-      byte[] bytes = ((String) value).getBytes();
+      byte[] bytes = ((String) value).getBytes(DEFAULT_CHARSET);
       buffer.writeInt(bytes.length);
       buffer.writeBytes(bytes);
     }
@@ -581,7 +582,7 @@ public enum PrimitiveFieldType implements FieldType {
     public String deserialize(ChannelBuffer buffer) {
       int length = buffer.readInt();
       ByteBuffer stringBuffer = buffer.readSlice(length).toByteBuffer();
-      return Charset.forName("US-ASCII").decode(stringBuffer).toString();
+      return DEFAULT_CHARSET.decode(stringBuffer).toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -678,6 +679,7 @@ public enum PrimitiveFieldType implements FieldType {
     }
   };
 
+  private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
   private static final ImmutableSet<String> TYPE_NAMES;
 
   static {

@@ -30,6 +30,7 @@ import org.ros.message.Time;
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
+ * @author mick.gaillard@gmail.com (Mickael Gaillard)
  */
 public class RawMessageSerializationTest {
 
@@ -136,6 +137,71 @@ public class RawMessageSerializationTest {
   public void testString() {
     RawMessage rawMessage = messageFactory.newFromType("std_msgs/String");
     rawMessage.setString("data", "Hello, ROS!");
+    checkSerializeAndDeserialize(rawMessage);
+  }
+  
+  @Test
+  public void testStringUTF8() {
+    RawMessage rawMessage = messageFactory.newFromType("std_msgs/String");
+    rawMessage.setString("data", "éêè €àáßëœ 文字化け");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // i18n test case
+    // base on http://www.inter-locale.com/whitepaper/learn/learn-to-test.html
+
+    // Combining Marks and Accents test
+    rawMessage.setString("data", "àéîōũ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // DOS 860 test
+    rawMessage.setString("data", "você nós mãe avô irmã criança");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Windows-1252 test
+    rawMessage.setString("data", "€ŒœŠš™©‰ƒ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Turkish test
+    rawMessage.setString("data", "ışık bir İyi Günler");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Dakuten and handakuten marks test
+    rawMessage.setString("data", "がざばだぱか゛さ゛た゛は");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Combining Grapheme Joiner character
+    rawMessage.setString("data", "אִ͏ַ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Bidi with Latin test
+    rawMessage.setString("data", "abcאבגדabc ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    rawMessage.setString("data", "אבגדabcאבגד");
+    checkSerializeAndDeserialize(rawMessage);
+
+    rawMessage.setString("data", "אבגד012אבגד");
+    checkSerializeAndDeserialize(rawMessage);
+
+    rawMessage.setString("data", "אבגד 012 012");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Complex Scripts test
+    rawMessage.setString("data", "สวัสดี");
+    checkSerializeAndDeserialize(rawMessage);
+
+    rawMessage.setString("data", "டாஹ்கோ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    rawMessage.setString("data", "بِسْمِ اللّهِ الرَّحْمـَنِ الرَّحِيمِ");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Numeric Shaping test
+    rawMessage.setString("data", "عدد مارس ١٩٩٨");
+    checkSerializeAndDeserialize(rawMessage);
+
+    // Common Scripts and Encodings test
+    rawMessage.setString("data", "Слава Жанна Ювеналий Ярополк");
     checkSerializeAndDeserialize(rawMessage);
   }
 
