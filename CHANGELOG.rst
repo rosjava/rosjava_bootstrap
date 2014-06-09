@@ -2,6 +2,12 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.21 (2014-06-09)
+-------------------
+* Android gradle plugin 0.9.+->0.11.+ (studio 0.6)
+* Android sdk build tools 19.0.3 -> 19.1 (studio 0.6)
+* Contributors: Daniel Stonier
+
 0.1.20 (2014-03-20)
 -------------------
 * Trim maven repository list and backup with maven central.
