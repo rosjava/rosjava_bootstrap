@@ -17,7 +17,7 @@ class RosAndroidPlugin implements Plugin<Project> {
             project.apply(plugin: 'ros')
         }
         project.extensions.create("rosandroid", RosAndroidPluginExtension)
-        project.rosandroid.buildToolsVersion = "19.0.3"
+        project.rosandroid.buildToolsVersion = "19.1.0"
         /*********************************************************************
          * Find the android plugin
          *********************************************************************/ 
