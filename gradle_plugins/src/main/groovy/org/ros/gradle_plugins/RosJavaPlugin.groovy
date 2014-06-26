@@ -23,9 +23,6 @@ class RosJavaPlugin implements Plugin<Project> {
         if (!project.plugins.findPlugin('maven-publish')) {
             project.apply(plugin: 'maven-publish')
         }
-        if (!project.plugins.findPlugin('eclipse')) {
-            project.apply(plugin: 'eclipse')
-        }
         
         project.sourceCompatibility = 1.6
         project.targetCompatibility = 1.6
