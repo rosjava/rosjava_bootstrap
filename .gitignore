@@ -1,4 +1,8 @@
 .gradle
 build
-
-/bin
+bin
+.project
+.classpath
+.settings
+*.iml
+.idea
