@@ -1,0 +1,4 @@
+test_msgs/TransitiveMsg1 msg
+---
+int32 a
+
