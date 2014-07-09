@@ -26,7 +26,7 @@ class RosAndroidPlugin implements Plugin<Project> {
                 mavenCentral()
             }
             dependencies {
-                classpath 'com.android.tools.build:gradle:0.11.+'
+                classpath 'com.android.tools.build:gradle:0.12.+'
             }
         }
         /********************************************************************** 
