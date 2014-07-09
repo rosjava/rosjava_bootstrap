@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.22 (2014-07-10)
+===================
+* Android gradle plugin 0.11.+->0.12.+ (studio 0.8.1)
+
 0.1.21 (2014-06-09)
 -------------------
 * Android gradle plugin 0.9.+->0.11.+ (studio 0.6)
