@@ -16,6 +16,7 @@
 
 apply plugin: 'groovy'
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
     compile gradleApi()
     compile localGroovy()
