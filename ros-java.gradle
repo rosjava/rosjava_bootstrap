@@ -23,10 +23,6 @@
  * 
  * subprojects {
  *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
- *   /*
- *     See https://github.com/rosjava/rosjava_bootstrap (look for gradle_plugins)
- *     to see what is going on under the hood of this plugin.
- *   */
  *   apply plugin: 'ros-java'
  *   ...
  */
