@@ -1,0 +1,107 @@
+/*
+ * Copyright (C) 2014 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+/*
+ * Apply this gradle script to configure maven url's and other properties in
+ * the root build.gradle of any rosjava project. Use alongside the api provided
+ * by the ros-java gradle plugin.
+ * 
+ * Usage:
+ * 
+ * subprojects {
+ *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
+ *   /*
+ *     See https://github.com/rosjava/rosjava_bootstrap (look for gradle_plugins)
+ *     to see what is going on under the hood of this plugin.
+ *   */
+ *   apply plugin: 'ros-java'
+ *   ...
+ */
+
+rootProject.subprojects {
+  /***********************
+   * Plugins
+   ***********************/
+  if (!plugins.findPlugin('maven')) {
+    apply(plugin: 'maven')
+  }
+  if (!plugins.findPlugin('java')) {
+    apply(plugin: 'java')
+  }
+  if (!plugins.findPlugin('maven-publish')) {
+    apply(plugin: 'maven-publish')
+  }
+
+  /***********************
+   * Environment Settings
+   ***********************/
+  ros.mavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+  ros.mavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
+  String mavenPath = System.getenv("ROS_MAVEN_PATH")
+  if (mavenPath != null) {
+    ros.mavenPath = mavenPath.tokenize(":")
+  }
+
+  /***********************
+   * Maven Repos
+   ***********************/
+  repositories {
+    if (ros.mavenPath != null) {
+      ros.mavenPath.each { path ->
+        maven {
+          url uri(path)
+        }
+      }
+    }
+    if (ros.mavenRepository != null) {
+      maven {
+        url ros.mavenRepository
+      }
+    }
+    mavenLocal()
+    maven {
+      url "http://repository.springsource.com/maven/bundles/release"
+    }
+    maven {
+      url "http://repository.springsource.com/maven/bundles/external"
+    }
+    mavenCentral()
+  }
+  
+  /***********************
+   * Java
+   ***********************/
+  sourceCompatibility = 1.6
+  targetCompatibility = 1.6
+
+  /***********************
+   * Maven Deployment
+   ***********************/
+  if ( ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
+    publishing {
+      publications {
+        mavenJava(MavenPublication) {
+          from project.components.java
+        }
+      }
+      repositories {
+        maven {
+          url 'file://' + project.ros.mavenDeploymentRepository
+        }
+      }
+    }
+  } 
+}
