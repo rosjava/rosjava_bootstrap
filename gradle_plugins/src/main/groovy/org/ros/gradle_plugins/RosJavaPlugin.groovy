@@ -24,8 +24,8 @@ class RosJavaPlugin implements Plugin<Project> {
             project.apply(plugin: 'maven-publish')
         }
         
-        project.sourceCompatibility = 1.6
-        project.targetCompatibility = 1.6
+        project.sourceCompatibility = 1.7
+        project.targetCompatibility = 1.7
 
         if ( project.ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
             project.publishing {
