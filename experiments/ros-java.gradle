@@ -15,6 +15,13 @@
  */
 
 /*
+ * *************************** ABORTED ***************************
+ * 
+ * See discussion in https://github.com/rosjava/rosjava_bootstrap/issues/41
+ * 
+ * I've left this lying around as a useful reference.
+ * ***************************************************************
+/*
  * ABOUT:
  * 
  * Configures a single gradle project (or subproject) to utilise ros-java settings.
