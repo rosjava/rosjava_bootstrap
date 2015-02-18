@@ -15,89 +15,101 @@
  */
 
 /*
- * Apply this gradle script to configure maven url's and other properties in
- * the root build.gradle of any rosjava project. Use alongside the api provided
- * by the ros-java gradle plugin.
+ * ABOUT:
  * 
- * Usage:
+ * Configures a single gradle project (or subproject) to utilise ros-java settings.
+ * 
+ * USAGE:
+ * 
+ * Generally:
+ * 
+ *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
+ * 
+ * In the root build.gradle file of a multiproject build:
  * 
  * subprojects {
  *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
- *   apply plugin: 'ros-java'
  *   ...
+ * }
  */
 
-rootProject.subprojects {
-  /***********************
-   * Plugins
-   ***********************/
-  if (!plugins.findPlugin('maven')) {
-    apply(plugin: 'maven')
-  }
-  if (!plugins.findPlugin('java')) {
-    apply(plugin: 'java')
-  }
-  if (!plugins.findPlugin('maven-publish')) {
-    apply(plugin: 'maven-publish')
-  }
-
-  /***********************
-   * Environment Settings
-   ***********************/
-  ros.mavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
-  ros.mavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
-  String mavenPath = System.getenv("ROS_MAVEN_PATH")
-  if (mavenPath != null) {
-    ros.mavenPath = mavenPath.tokenize(":")
-  }
-
-  /***********************
-   * Maven Repos
-   ***********************/
-  repositories {
-    if (ros.mavenPath != null) {
-      ros.mavenPath.each { path ->
-        maven {
-          url uri(path)
-        }
-      }
-    }
-    if (ros.mavenRepository != null) {
-      maven {
-        url ros.mavenRepository
-      }
-    }
-    mavenLocal()
-    maven {
-      url "http://repository.springsource.com/maven/bundles/release"
-    }
-    maven {
-      url "http://repository.springsource.com/maven/bundles/external"
-    }
-    mavenCentral()
-  }
-  
-  /***********************
-   * Java
-   ***********************/
-  sourceCompatibility = 1.6
-  targetCompatibility = 1.6
-
-  /***********************
-   * Maven Deployment
-   ***********************/
-  if ( ros.mavenDeploymentRepository != 'null' && project.ros.mavenDeploymentRepository != '' ) {
-    publishing {
-      publications {
-        mavenJava(MavenPublication) {
-          from project.components.java
-        }
-      }
-      repositories {
-        maven {
-          url 'file://' + project.ros.mavenDeploymentRepository
-        }
-      }
-    }
-  } 
+/* 
+ * Some notes: don't force the user to apply this to every subproject...let them choose
+ * when and where it gets applied. This usually means applying this script redundantly
+ * for every subproject. To be smarter (but force the user to do it this way) would
+ * be to separate the components in this script to put subproject specific commands in a
+ *        rootProject.subprojects {}
+ * closure and general ones in no closure...then call it from the root.gradle (not inside
+ * any allprojects/subprojects closures.
+ */
+/***********************
+ * Plugins
+ ***********************/
+if (!plugins.findPlugin('maven')) {
+  apply(plugin: 'maven')
 }
+if (!plugins.findPlugin('java')) {
+  apply(plugin: 'java')
+}
+if (!plugins.findPlugin('maven-publish')) {
+  apply(plugin: 'maven-publish')
+}
+
+/***********************
+ * Environment Settings
+ ***********************/
+ext {
+  rosMavenRepository = System.getenv("ROS_MAVEN_REPOSITORY")
+  rosMavenDeploymentRepository = System.getenv("ROS_MAVEN_DEPLOYMENT_REPOSITORY")
+  rosMavenPath = System.getenv("ROS_MAVEN_PATH")
+}
+
+/***********************
+ * Maven Repos
+ ***********************/
+repositories {
+  if (rosMavenPath != null) {
+    rosMavenPath.tokenize(":").each { path ->
+      maven {
+	url uri(path)
+      }
+    }
+  }
+  if (rosMavenRepository != null) {
+    maven {
+      url rosMavenRepository
+    }
+  }
+  mavenLocal()
+  maven {
+    url "http://repository.springsource.com/maven/bundles/release"
+  }
+  maven {
+    url "http://repository.springsource.com/maven/bundles/external"
+  }
+  mavenCentral()
+}
+
+/***********************
+ * Java
+ ***********************/
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+/***********************
+ * Maven Deployment
+ ***********************/
+if ( rosMavenDeploymentRepository != 'null' && rosMavenDeploymentRepository != '' ) {
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+	from components.java
+      }
+    }
+    repositories {
+      maven {
+	url 'file://' + rosMavenDeploymentRepository
+      }
+    }
+  }
+} 
