@@ -93,7 +93,7 @@ class CatkinPackages {
         def manifestTree = project.fileTree(dir: workspace,
                                             include: "**/package.xml")
         manifestTree.each { file -> 
-          def pkg = new CatkinPackage(file)
+          def pkg = new CatkinPackage(project, file)
           if(this.pkgs.containsKey(pkg.name)) {
             if(this.pkgs[pkg.name].version < pkg.version) {
               println("Catkin generate tree: replacing older version of " + pkg.name + "[" + this.pkgs[pkg.name].version + "->" + pkg.version + "]") 
