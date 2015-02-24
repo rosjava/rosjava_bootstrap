@@ -41,6 +41,13 @@ class RosPlugin implements Plugin<Project> {
           url project.ros.mavenRepository
         }
       }
+      /* 
+       * This will often be the same as ROS_MAVEN_REPOSITORY, but this way it lets a user
+       * provide a repository of their own via the environment variable and use this as a fallback.
+       */
+      maven {
+        url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+      }
       mavenLocal()
       maven {
         url "http://repository.springsource.com/maven/bundles/release"
@@ -62,6 +69,6 @@ class RosPluginExtension {
   RosPluginExtension() {
     /* Initialising the strings here gets rid of the dynamic property deprecated warnings. */
     this.mavenDeploymentRepository = ""
-    this.mavenRepository = "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
+    this.mavenRepository = ""
   }
 }
