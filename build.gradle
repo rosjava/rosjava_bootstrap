@@ -14,9 +14,7 @@
  * the License.
  */
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.2.1'
-}
+apply from: project.file('gradle.gradle')
 
 allprojects {
   group="org.ros.rosjava_bootstrap"
