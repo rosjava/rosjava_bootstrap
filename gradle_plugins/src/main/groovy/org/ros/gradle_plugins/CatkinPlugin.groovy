@@ -107,7 +107,7 @@ class CatkinPackages {
         def pkg
         def result = false
         try {
-            pkg = this.pkgs[package_name.replace(" ","")] /* make sure spaces do not interfere */
+            pkg = this.pkgs[package_name] /* make sure spaces do not interfere */
             /* println("    Name: " + pkg.name + "-" + pkg.version) */
             /* println("    Dep-dependencies: " + pkg.dependencies) */
             pkg.dependencies.each { d ->
@@ -171,7 +171,7 @@ class CatkinPackage {
         version = packageXml.version.text()
         dependencies = []
         packageXml.build_depend.each { d ->
-            dependencies.add(d.text())
+            dependencies.add(d.text().replace(" ",""))
         }
     }
     def String toString() {
