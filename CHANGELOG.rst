@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.23 (2015-06-16)
+===================
+* Bugfix the xml parser to avoid whitespaces in returned elements.
+
 0.1.22 (2014-07-10)
 ===================
 * Android gradle plugin 0.11.+->0.12.+ (studio 0.8.1)
