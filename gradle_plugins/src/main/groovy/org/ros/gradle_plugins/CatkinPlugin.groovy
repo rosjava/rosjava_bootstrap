@@ -107,7 +107,7 @@ class CatkinPackages {
         def pkg
         def result = false
         try {
-            pkg = this.pkgs[package_name]
+            pkg = this.pkgs[package_name.replace(" ","")] /* make sure spaces do not interfere */
             /* println("    Name: " + pkg.name + "-" + pkg.version) */
             /* println("    Dep-dependencies: " + pkg.dependencies) */
             pkg.dependencies.each { d ->
