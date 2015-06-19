@@ -173,6 +173,9 @@ class CatkinPackage {
         packageXml.build_depend.each { d ->
             dependencies.add(d.text().replace(" ",""))
         }
+        packageXml.depend.each { d ->
+            dependencies.add(d.text().replace(" ",""))
+        }
     }
     def String toString() {
         def out = new String()
