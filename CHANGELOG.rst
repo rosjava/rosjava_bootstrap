@@ -2,6 +2,10 @@
 Changelog for package rosjava_bootstrap
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.24 (2015-06-19)
+===================
+* Xml parser should also look for depend tags as well as build_depend tags.
+
 0.1.23 (2015-06-16)
 ===================
 * Bugfix the xml parser to avoid whitespaces in returned elements.
