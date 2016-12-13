@@ -30,12 +30,12 @@
  * 
  * Generally:
  * 
- *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
+ *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/kinetic/ros-java.gradle"
  * 
  * In the root build.gradle file of a multiproject build:
  * 
  * subprojects {
- *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/indigo/ros-java.gradle"
+ *   apply from: "https://github.com/rosjava/rosjava_bootstrap/raw/kinetic/ros-java.gradle"
  *   ...
  * }
  */
