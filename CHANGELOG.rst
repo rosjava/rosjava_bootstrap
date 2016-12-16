@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.0 (2016-12-13)
+------------------
+* Updates for Kinetic release.
+
 0.2.1 (2015-02-25)
 ------------------
 * minor bugfixes and improvements.
