@@ -11,7 +11,7 @@ class RosAndroidPlugin implements Plugin<Project> {
   void apply(Project project) {
     project.apply plugin: "ros"
     project.extensions.create("rosandroid", RosAndroidPluginExtension)
-    project.rosandroid.buildToolsVersion = "21.1.2"
+    project.rosandroid.buildToolsVersion = "25.0.2"
 
     /********************************************************************** 
      * Publishing - not we're using old style here. Upgrade to maven-publish
