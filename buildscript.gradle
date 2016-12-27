@@ -41,7 +41,7 @@ rootProject.buildscript {
         maven {
             url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
         }
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.ros.rosjava_bootstrap:gradle_plugins:[0.3,0.4)"
