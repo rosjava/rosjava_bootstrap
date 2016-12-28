@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Forthcoming
------------
+0.3.1 (2016-12-28)
+------------------
 * Switch Gradle target for rosjava libraries to publish
 * Switch from Maven Central to jcenter
 * Gradle 2.2.1 -> 2.14.1
