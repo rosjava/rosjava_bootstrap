@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Forthcoming
+-----------
+* Switch Gradle target for rosjava libraries to publish
+* Switch from Maven Central to jcenter
+* Gradle 2.2.1 -> 2.14.1
+* Android SDK Build Tools 21.1.2 -> 25.0.2
+* Contributors: Daniel Stonier, Julian Cerruti
+
 0.3.0 (2016-12-13)
 ------------------
 * Updates for Kinetic release.
