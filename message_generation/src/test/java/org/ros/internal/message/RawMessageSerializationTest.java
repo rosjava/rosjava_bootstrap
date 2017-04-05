@@ -266,4 +266,38 @@ public class RawMessageSerializationTest {
     rawMessage.setFloat64Array("data", new double[] { 1, 2, 3, 4, 5 });
     checkSerializeAndDeserialize(rawMessage);
   }
+  
+  @Test
+  public void testChannelBufferFixedSizeWithInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "uint8[5] data");
+    ChannelBuffer buffer = MessageBuffers.dynamicBuffer();
+    buffer.writeBytes(new byte[] { 1, 2, 3, 4, 5 });
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setChannelBuffer("data", buffer);
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testChannelBufferFixedSizeNoInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "uint8[5] data");
+    ChannelBuffer buffer = MessageBuffers.dynamicBuffer();
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setChannelBuffer("data", buffer);
+    checkSerializeAndDeserialize(rawMessage);
+  }
+  
+  @Test
+  public void testInt32FixedSizeArrayWithInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "int32[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setInt32Array("data", new int[] { 1, 2, 3, 4, 5 });
+    checkSerializeAndDeserialize(rawMessage);
+  }
+  
+  @Test
+  public void testInt32FixedSizeArrayNoInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "int32[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    checkSerializeAndDeserialize(rawMessage);
+  }
 }
