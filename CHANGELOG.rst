@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Forthcoming
+-----------
+* Bumping message_generation version to kinetic range in CatkinPlugin script for generating new message artifacts properly.
+* Contributors: Juan Ignacio Ubeira, Julian Cerruti
+
 0.3.1 (2016-12-28)
 ------------------
 * Switch Gradle target for rosjava libraries to publish
