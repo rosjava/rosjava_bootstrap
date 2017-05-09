@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Forthcoming
------------
+0.3.2 (2017-05-09)
+------------------
 * Bumping message_generation version to kinetic range in CatkinPlugin script for generating new message artifacts properly.
 * Contributors: Juan Ignacio Ubeira, Julian Cerruti
 
