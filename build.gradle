@@ -63,4 +63,4 @@ subprojects {
   }
 }
 
-defaultTasks 'publish', 'installApp'
+defaultTasks 'publish', 'installDist'
