@@ -96,7 +96,7 @@ public class LongArrayField extends Field {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((value == null) ? 0 : value.hashCode());
+    result = prime * result + ((value == null) ? 0 : Arrays.hashCode(value));
     return result;
   }
 
