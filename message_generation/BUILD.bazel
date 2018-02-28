@@ -1,0 +1,103 @@
+package(default_visibility = ["//visibility:public"])
+
+java_library(
+    name = "message_generation",
+    srcs = glob([
+        "src/main/**/*.java",
+    ]),
+    deps = [
+        "//3rdparty/jvm/com/google/guava",
+        "//3rdparty/jvm/commons_pool",
+        "//3rdparty/jvm/io/netty",
+        "//3rdparty/jvm/org/apache/commons:com_springsource_org_apache_commons_codec",
+        "//3rdparty/jvm/org/apache/commons:com_springsource_org_apache_commons_io",
+        "//3rdparty/jvm/org/apache/commons:com_springsource_org_apache_commons_lang",
+    ],
+)
+
+java_test(
+    name = "ArrayFieldTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/field/ArrayFieldTest.java"],
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/io/netty",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "MessageInterfaceBuilderTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/MessageInterfaceBuilderTest.java"],
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "Md5GeneratorTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/Md5GeneratorTest.java"],
+    resources = glob(["src/test/resources/**/*"]),
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "MessageTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/MessageTest.java"],
+    resources = glob(["src/test/resources/**/*"]),
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/com/google/guava",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "RawMessageSerializationTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/RawMessageSerializationTest.java"],
+    resources = glob(["src/test/resources/**/*"]),
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/com/google/guava",
+        "//3rdparty/jvm/io/netty",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "ServiceTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/internal/message/ServiceTest.java"],
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "DurationTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/message/DurationTest.java"],
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/junit",
+    ],
+)
+
+java_test(
+    name = "TimeTest",
+    size = "small",
+    srcs = ["src/test/java/org/ros/message/TimeTest.java"],
+    deps = [
+        ":message_generation",
+        "//3rdparty/jvm/junit",
+    ],
+)
