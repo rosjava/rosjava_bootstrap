@@ -19,6 +19,7 @@ package org.ros.internal.message;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Lists;
+import java.util.Arrays;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Before;
@@ -278,6 +279,16 @@ public class RawMessageSerializationTest {
   }
 
   @Test
+  public void testChannelBufferFixedSizeWithIncompleteInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "uint8[5] data");
+    ChannelBuffer buffer = MessageBuffers.dynamicBuffer();
+    buffer.writeBytes(new byte[] { 1, 2, 3 });
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setChannelBuffer("data", buffer);
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
   public void testChannelBufferFixedSizeNoInitialization() {
     topicDefinitionResourceProvider.add("foo/foo", "uint8[5] data");
     ChannelBuffer buffer = MessageBuffers.dynamicBuffer();
@@ -295,6 +306,14 @@ public class RawMessageSerializationTest {
   }
   
   @Test
+  public void testInt32FixedSizeArrayWithIncompleteInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "int32[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setInt32Array("data", new int[] { 1, 2, 3 });
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
   public void testInt32FixedSizeArrayNoInitialization() {
     topicDefinitionResourceProvider.add("foo/foo", "int32[5] data");
     RawMessage rawMessage = messageFactory.newFromType("foo/foo");
@@ -308,10 +327,43 @@ public class RawMessageSerializationTest {
     rawMessage.setFloat64Array("data", new double[] { 1, 2, 3, 4, 5 });
     checkSerializeAndDeserialize(rawMessage);
   }
+
+  @Test
+  public void testFloat64FixedSizeArrayWithIncompleteInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "float64[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setFloat64Array("data", new double[] { 1, 2, 3 });
+    checkSerializeAndDeserialize(rawMessage);
+  }
   
   @Test
   public void testFloat64FixedSizeArrayNoInitialization() {
     topicDefinitionResourceProvider.add("foo/foo", "float64[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testStringFixedSizeArrayWithInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "string[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    String[] stringArray = new String[] { "String 1", "String 2", "String 3", "String 4", "String 5" };
+    rawMessage.setStringList("data", Arrays.asList(stringArray));
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testStringFixedSizeArrayWithIncompleteInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "string[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    String[] stringArray = new String[] { "String 1", "String 2", "String 3" };
+    rawMessage.setStringList("data", Arrays.asList(stringArray));
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testStringFixedSizeArrayWithNoInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "string[5] data");
     RawMessage rawMessage = messageFactory.newFromType("foo/foo");
     checkSerializeAndDeserialize(rawMessage);
   }
