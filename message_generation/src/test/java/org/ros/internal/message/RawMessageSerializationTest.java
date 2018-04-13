@@ -367,4 +367,27 @@ public class RawMessageSerializationTest {
     RawMessage rawMessage = messageFactory.newFromType("foo/foo");
     checkSerializeAndDeserialize(rawMessage);
   }
+
+  @Test
+  public void testByteFixedSizeArrayWithInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "byte[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setInt8Array("data", new byte[] { 1, 2, 3, 4, 5 });
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testByteFixedSizeArrayWithIncompleteInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "byte[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    rawMessage.setInt8Array("data", new byte[] { 1, 2, 3 });
+    checkSerializeAndDeserialize(rawMessage);
+  }
+
+  @Test
+  public void testByteFixedSizeArrayWithNoInitialization() {
+    topicDefinitionResourceProvider.add("foo/foo", "byte[5] data");
+    RawMessage rawMessage = messageFactory.newFromType("foo/foo");
+    checkSerializeAndDeserialize(rawMessage);
+  }
 }
