@@ -56,15 +56,17 @@ class CatkinPlugin implements Plugin<Project> {
         if (packageXml != null) {
             project.catkin.pkg = new CatkinPackage(project, packageXml)
         }
+        project.catkin.tree.generate()
+
 	    setTasks()
     }
     def void setTasks() {
-        project.task('catkinPackageInfo') << {
+        project.task('catkinPackageInfo').doLast {
             println("CatkinPlugin is happy, you should be too.")
             println("Catkin Workspaces........." + project.catkin.workspaces)
             println("Catkin Packages")
-            project.catkin.packages.each { pkg ->
-                print pkg.value.toString()
+            project.catkin.tree.pkgs.each { pkg ->
+                println(pkg.value.toString())
             }
         }
     }
