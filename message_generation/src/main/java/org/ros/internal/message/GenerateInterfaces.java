@@ -24,6 +24,9 @@ import org.ros.exception.RosMessageRuntimeException;
 import org.ros.internal.message.definition.MessageDefinitionProviderChain;
 import org.ros.internal.message.definition.MessageDefinitionTupleParser;
 import org.ros.internal.message.action.ActionDefinitionFileProvider;
+import org.ros.internal.message.action.ActionGoalGenerationTemplate;
+import org.ros.internal.message.action.ActionFeedbackGenerationTemplate;
+import org.ros.internal.message.action.ActionResultGenerationTemplate;
 import org.ros.internal.message.service.ServiceDefinitionFileProvider;
 import org.ros.internal.message.topic.TopicDefinitionFileProvider;
 import org.ros.message.MessageDeclaration;
@@ -46,6 +49,10 @@ public class GenerateInterfaces {
   private final ActionDefinitionFileProvider actionDefinitionFileProvider;
   private final MessageDefinitionProviderChain messageDefinitionProviderChain;
   private final MessageFactory messageFactory;
+  private final ActionGoalGenerationTemplate actionGoalGenerationTemplate = new ActionGoalGenerationTemplate();
+  private final ActionFeedbackGenerationTemplate actionFeedbackGenerationTemplate = new ActionFeedbackGenerationTemplate();
+  private final ActionResultGenerationTemplate actionResultGenerationTemplate = new ActionResultGenerationTemplate();
+
   static private final String ROS_PACKAGE_PATH = "ROS_PACKAGE_PATH";
 
   public GenerateInterfaces() {
@@ -153,12 +160,18 @@ public class GenerateInterfaces {
       writeInterface(actionDeclaration, outputDirectory, false);
       List<String> goalResultAndFeedback = MessageDefinitionTupleParser.parse(definition, 3);
 
-      MessageDeclaration goalDeclaration =
-              MessageDeclaration.of(actionType.getType() + "Goal", goalResultAndFeedback.get(0));
-      MessageDeclaration resultDeclaration =
-              MessageDeclaration.of(actionType.getType() + "Result", goalResultAndFeedback.get(1));
-      MessageDeclaration feedbackDeclaration =
-              MessageDeclaration.of(actionType.getType() + "Feedback", goalResultAndFeedback.get(2));
+      MessageDeclaration goalDeclaration = MessageDeclaration.of(
+              actionType.getType() + "Goal",
+              actionGoalGenerationTemplate.applyTemplate(goalResultAndFeedback.get(0))
+      );
+      MessageDeclaration resultDeclaration = MessageDeclaration.of(
+              actionType.getType() + "Result",
+              actionResultGenerationTemplate.applyTemplate(goalResultAndFeedback.get(1))
+      );
+      MessageDeclaration feedbackDeclaration = MessageDeclaration.of(
+              actionType.getType() + "Feedback",
+              actionFeedbackGenerationTemplate.applyTemplate(goalResultAndFeedback.get(2))
+      );
 
       writeInterface(goalDeclaration, outputDirectory, true);
       writeInterface(resultDeclaration, outputDirectory, true);
