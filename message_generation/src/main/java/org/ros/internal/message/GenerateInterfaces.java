@@ -156,7 +156,7 @@ public class GenerateInterfaces {
       MessageDeclaration goalDeclaration =
               MessageDeclaration.of(actionType.getType() + "Goal", goalResultAndFeedback.get(0));
       MessageDeclaration resultDeclaration =
-              MessageDeclaration.of(actionType.getType() + "Response", goalResultAndFeedback.get(1));
+              MessageDeclaration.of(actionType.getType() + "Result", goalResultAndFeedback.get(1));
       MessageDeclaration feedbackDeclaration =
               MessageDeclaration.of(actionType.getType() + "Feedback", goalResultAndFeedback.get(2));
 
