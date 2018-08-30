@@ -24,9 +24,12 @@ import org.ros.exception.RosMessageRuntimeException;
 import org.ros.internal.message.definition.MessageDefinitionProviderChain;
 import org.ros.internal.message.definition.MessageDefinitionTupleParser;
 import org.ros.internal.message.action.ActionDefinitionFileProvider;
-import org.ros.internal.message.action.ActionGoalGenerationTemplate;
-import org.ros.internal.message.action.ActionFeedbackGenerationTemplate;
-import org.ros.internal.message.action.ActionResultGenerationTemplate;
+import org.ros.internal.message.action.ActionGenerationTemplateActionGoal;
+import org.ros.internal.message.action.ActionGenerationTemplateActionResult;
+import org.ros.internal.message.action.ActionGenerationTemplateActionFeedback;
+import org.ros.internal.message.action.ActionGenerationTemplateGoal;
+import org.ros.internal.message.action.ActionGenerationTemplateResult;
+import org.ros.internal.message.action.ActionGenerationTemplateFeedback;
 import org.ros.internal.message.service.ServiceDefinitionFileProvider;
 import org.ros.internal.message.topic.TopicDefinitionFileProvider;
 import org.ros.message.MessageDeclaration;
@@ -49,9 +52,14 @@ public class GenerateInterfaces {
   private final ActionDefinitionFileProvider actionDefinitionFileProvider;
   private final MessageDefinitionProviderChain messageDefinitionProviderChain;
   private final MessageFactory messageFactory;
-  private final ActionGoalGenerationTemplate actionGoalGenerationTemplate = new ActionGoalGenerationTemplate();
-  private final ActionFeedbackGenerationTemplate actionFeedbackGenerationTemplate = new ActionFeedbackGenerationTemplate();
-  private final ActionResultGenerationTemplate actionResultGenerationTemplate = new ActionResultGenerationTemplate();
+
+  private final MessageGenerationTemplate actionGenerationTemplateGoal     = new ActionGenerationTemplateGoal();
+  private final MessageGenerationTemplate actionGenerationTemplateResult   = new ActionGenerationTemplateResult();
+  private final MessageGenerationTemplate actionGenerationTemplateFeedback = new ActionGenerationTemplateFeedback();
+
+  private final MessageGenerationTemplate actionGenerationTemplateActionGoal     = new ActionGenerationTemplateActionGoal();
+  private final MessageGenerationTemplate actionGenerationTemplateActionResult   = new ActionGenerationTemplateActionResult();
+  private final MessageGenerationTemplate actionGenerationTemplateActionFeedback = new ActionGenerationTemplateActionFeedback();
 
   static private final String ROS_PACKAGE_PATH = "ROS_PACKAGE_PATH";
 
@@ -162,20 +170,37 @@ public class GenerateInterfaces {
 
       MessageDeclaration goalDeclaration = MessageDeclaration.of(
               actionType.getType() + "Goal",
-              actionGoalGenerationTemplate.applyTemplate(goalResultAndFeedback.get(0))
+              actionGenerationTemplateGoal.applyTemplate(goalResultAndFeedback.get(0))
       );
       MessageDeclaration resultDeclaration = MessageDeclaration.of(
               actionType.getType() + "Result",
-              actionResultGenerationTemplate.applyTemplate(goalResultAndFeedback.get(1))
+              actionGenerationTemplateResult.applyTemplate(goalResultAndFeedback.get(1))
       );
       MessageDeclaration feedbackDeclaration = MessageDeclaration.of(
               actionType.getType() + "Feedback",
-              actionFeedbackGenerationTemplate.applyTemplate(goalResultAndFeedback.get(2))
+              actionGenerationTemplateFeedback.applyTemplate(goalResultAndFeedback.get(2))
+      );
+
+      MessageDeclaration actionGoalDeclaration = MessageDeclaration.of(
+              actionType.getType() + "ActionGoal",
+              actionGenerationTemplateActionGoal.applyTemplate(actionType.getType())
+      );
+      MessageDeclaration actionResultDeclaration = MessageDeclaration.of(
+              actionType.getType() + "ActionResult",
+              actionGenerationTemplateActionResult.applyTemplate(actionType.getType())
+      );
+      MessageDeclaration actionFeedbackDeclaration = MessageDeclaration.of(
+              actionType.getType() + "ActionFeedback",
+              actionGenerationTemplateActionFeedback.applyTemplate(actionType.getType())
       );
 
       writeInterface(goalDeclaration, outputDirectory, true);
       writeInterface(resultDeclaration, outputDirectory, true);
       writeInterface(feedbackDeclaration, outputDirectory, true);
+
+      writeInterface(actionGoalDeclaration, outputDirectory, true);
+      writeInterface(actionResultDeclaration, outputDirectory, true);
+      writeInterface(actionFeedbackDeclaration, outputDirectory, true);
     }
   }
 

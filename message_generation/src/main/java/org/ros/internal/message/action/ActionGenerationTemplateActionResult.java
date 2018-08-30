@@ -16,10 +16,12 @@
 
 package org.ros.internal.message.action;
 
+import org.ros.internal.message.MessageGenerationTemplate;
+
 /**
  * @author arne.peters@tum.de (Arne Peters)
  */
-public class ActionFeedbackGenerationTemplate {
+public class ActionGenerationTemplateActionResult implements MessageGenerationTemplate {
 
   /**
    * @return returns this {@link Message} as a {@link RawMessage}
@@ -29,6 +31,6 @@ public class ActionFeedbackGenerationTemplate {
            "\n" +
            "Header header\n" +
            "actionlib_msgs/GoalStatus status\n" +
-           messageSource;
+           messageSource + "Result result";
   }
 }
