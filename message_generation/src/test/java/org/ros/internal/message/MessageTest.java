@@ -20,10 +20,14 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Lists;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Before;
 import org.junit.Test;
 import org.ros.internal.message.topic.TopicDefinitionResourceProvider;
 import org.ros.message.MessageFactory;
+
+import java.nio.ByteOrder;
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
@@ -114,11 +118,13 @@ public class MessageTest {
     assertEquals("Hello, ROS! # comment", rawMessage.getString("data"));
   }
 
+  @Test
   public void testInt8List() {
     topicDefinitionResourceProvider.add("foo/foo", "int8[] data");
     RawMessage rawMessage = messageFactory.newFromType("foo/foo");
-    byte[] data = new byte[] { (byte) 1, (byte) 2, (byte) 3 };
-    rawMessage.setInt8Array("data", data);
+    byte[] rawData = new byte[] { (byte) 1, (byte) 2, (byte) 3 };
+    ChannelBuffer data = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, rawData);
+    rawMessage.setInt8Array("data", rawData);
     assertEquals(data, rawMessage.getInt8Array("data"));
   }
 }

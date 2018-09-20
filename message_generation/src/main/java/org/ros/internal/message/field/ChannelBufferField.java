@@ -19,6 +19,7 @@ package org.ros.internal.message.field;
 import com.google.common.base.Preconditions;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.ros.internal.message.MessageBuffers;
 
 import java.nio.ByteOrder;
@@ -52,9 +53,15 @@ public class ChannelBufferField extends Field {
 
   @Override
   public void setValue(Object value) {
-    Preconditions.checkArgument(((ChannelBuffer) value).order() == ByteOrder.LITTLE_ENDIAN);
-    Preconditions.checkArgument(size < 0 || ((ChannelBuffer) value).readableBytes() == size);
-    this.value = (ChannelBuffer) value;
+    ChannelBuffer channelBufferValue = null;
+    if (value instanceof byte[]) {
+      channelBufferValue = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, byte[].class.cast(value));
+    } else if (value instanceof ChannelBuffer) {
+      channelBufferValue = ChannelBuffer.class.cast(value);
+    }
+    Preconditions.checkArgument(channelBufferValue.order() == ByteOrder.LITTLE_ENDIAN);
+    Preconditions.checkArgument(size < 0 || channelBufferValue.readableBytes() == size);
+    this.value = channelBufferValue;
   }
 
   @Override
