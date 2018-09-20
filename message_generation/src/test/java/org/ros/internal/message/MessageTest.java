@@ -114,7 +114,6 @@ public class MessageTest {
     assertEquals("Hello, ROS! # comment", rawMessage.getString("data"));
   }
 
-  @Test
   public void testInt8List() {
     topicDefinitionResourceProvider.add("foo/foo", "int8[] data");
     RawMessage rawMessage = messageFactory.newFromType("foo/foo");
