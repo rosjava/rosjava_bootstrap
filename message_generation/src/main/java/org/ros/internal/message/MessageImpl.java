@@ -161,8 +161,8 @@ class MessageImpl implements RawMessage, GetInstance {
   }
 
   @Override
-  public byte[] getInt8Array(String name) {
-    return (byte[]) messageFields.getFieldValue(name);
+  public ChannelBuffer getInt8Array(String name) {
+    return (ChannelBuffer) messageFields.getFieldValue(name);
   }
 
   @Override

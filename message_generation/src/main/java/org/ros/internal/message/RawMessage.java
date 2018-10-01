@@ -85,7 +85,7 @@ public interface RawMessage extends Message {
 
   byte getInt8(String name);
 
-  byte[] getInt8Array(String name);
+  ChannelBuffer getInt8Array(String name);
 
   <T extends Message> T getMessage(String name);
 
