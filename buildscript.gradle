@@ -41,6 +41,7 @@ rootProject.buildscript {
         maven {
             url "https://github.com/rosjava/rosjava_mvn_repo/raw/master"
         }
+        google()
         jcenter()
     }
     dependencies {
