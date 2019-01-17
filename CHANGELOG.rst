@@ -1,6 +1,19 @@
 Changelog
 =========
 
+Forthcoming
+-----------
+  Gradle upgrade to version 4.10.2.
+* Adding google to repository list in buildscript.gradle.
+* Using ChannelBuffers for int8[] data; fixing testInt8List.
+* Adding action generation implementation.
+* Add tests for byte arrays.
+* Add tests for incomplete initialization and string arrays.
+* Add tests for fixed sized arrays of floats.
+* Add Bazel build for message_generation.
+* Minor fixes.
+* Contributors: Arne, Ernesto Corbellini, Juan Ignacio Ubeira, Rodrigo Queiro
+
 0.3.2 (2017-05-09)
 ------------------
 * Bumping message_generation version to kinetic range in CatkinPlugin script for generating new message artifacts properly.
