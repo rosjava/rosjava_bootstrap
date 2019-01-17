@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Forthcoming
------------
+0.3.3 (2019-01-17)
+------------------
   Gradle upgrade to version 4.10.2.
 * Adding google to repository list in buildscript.gradle.
 * Using ChannelBuffers for int8[] data; fixing testInt8List.
